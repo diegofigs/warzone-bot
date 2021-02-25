@@ -25,11 +25,10 @@ for (const folder of commandFolders) {
 client.on('ready', () => {
   console.log('I am ready!');
   client.user.setPresence({
-    game: { 
+    activity: { 
         name: 'warzone-bot.io',
         type: 'PLAYING'
-    },
-    status: 'online'
+    }
   });
 });
 
