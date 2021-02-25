@@ -5,7 +5,13 @@ const fs = require('fs');
 const Discord = require('discord.js');
 const { prefix } = require('./config');
 
-const client = new Discord.Client();
+const client = new Discord.Client({
+  activity: { 
+    name: 'warzone-bot.io',
+    type: 'PLAYING'
+  },
+  status: 'online'
+});
 client.commands = new Discord.Collection();
 const cooldowns = new Discord.Collection();
 
@@ -24,12 +30,6 @@ for (const folder of commandFolders) {
  */
 client.on('ready', () => {
   console.log('I am ready!');
-  client.user.setPresence({
-    activity: { 
-        name: 'warzone-bot.io',
-        type: 'PLAYING'
-    }
-  });
 });
 
 // Create an event listener for messages
