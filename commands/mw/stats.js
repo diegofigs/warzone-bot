@@ -1,3 +1,4 @@
+const Discord = require('discord.js');
 const { getStats } = require('../../core');
 
 module.exports = {
