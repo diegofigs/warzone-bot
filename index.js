@@ -6,11 +6,13 @@ const Discord = require('discord.js');
 const { prefix } = require('./config');
 
 const client = new Discord.Client({
-  activity: { 
-    name: 'warzone-bot.io',
-    type: 'PLAYING'
-  },
-  status: 'online'
+  presence: {
+    activity: { 
+      name: 'warzone-bot.io',
+      type: 'PLAYING'
+    },
+    status: 'online'
+  }
 });
 client.commands = new Discord.Collection();
 const cooldowns = new Discord.Collection();
