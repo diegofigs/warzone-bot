@@ -5,10 +5,11 @@ const cooldowns = new Discord.Collection();
 
 module.exports = {
 	name: 'message',
-	execute: async (message, client) => {
+	execute: async (message) => {
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
   
+    const { client } = message;
     const command = client.commands.get(commandName)
       || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
   
