@@ -108,7 +108,10 @@ exports.getLeaderboard = async (players) => {
         stats.highestKD = kdRatio;
       }
       return stats;
-    }, {});
+    }, {
+      mostKills: undefined,
+      highestKD: undefined,
+    });
 
     return { gamertag, ...stats };
   }, { concurrency: 0 });
