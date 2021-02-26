@@ -88,8 +88,8 @@ exports.getDailyStats = async (players) => {
 };
 
 /**
- * 
- * @param {Array<{ gamertag, platform }>} players list of player objects
+ * Get last 20 matches' stats from `players` ordered by kills, KD ratios.
+ * @param {{ gamertag: string, platform: string }[]} players array of player objects
  */
 exports.getLeaderboard = async (players) => {
   if (CREDENTIALS.username && CREDENTIALS.password) {
@@ -108,19 +108,13 @@ exports.getLeaderboard = async (players) => {
         stats.highestKD = kdRatio;
       }
       return stats;
-    }, {
-      mostKills: undefined,
-      highestKD: undefined,
-    });
+    }, {});
 
     return { gamertag, ...stats };
   }, { concurrency: 0 });
 
-  const playerStatsByKills = playerStats.sort((a, b) => b.mostKills - a.mostKills);
-  const playerStatsByRatio = playerStats.sort((a, b) => b.highestKD - a.highestKD);
-
   return {
-    playerStatsByKills,
-    playerStatsByRatio
+    playerStatsByKills: playerStats.sort((a, b) => b.mostKills - a.mostKills),
+    playerStatsByRatio: playerStats.sort((a, b) => b.highestKD - a.highestKD)
   };
 };
