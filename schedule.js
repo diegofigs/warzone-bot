@@ -9,4 +9,5 @@ for (const jobName of jobFiles) {
   const { name, cron, rule, execute } = require(`./jobs/${jobName}`);
   const frequency = rule ? rule : cron;
   schedule.scheduleJob(name, frequency, execute);
+  console.log(`Scheduled: ${new Date().toLocaleString('en')}`);
 }
