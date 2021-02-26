@@ -11,6 +11,7 @@ const players = dataFiles.map(file => {
 
 module.exports = {
   name: 'leaderboard',
+  aliases: ['rankings'],
 	description: `Fetch squad's rankings ordered by Kills and KD`,
 	execute: async (message) => {
     try {
