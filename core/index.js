@@ -28,10 +28,6 @@ exports.getCareer = async ({ gamertag, platform }) => {
 exports.getStats = async ({ gamertag, platform }) => {
   if (CREDENTIALS.username && CREDENTIALS.password) {
     await API.login(CREDENTIALS.username, CREDENTIALS.password);
-
-    // const userInfo = await API.getLoggedInUserInfo();
-    // console.log('Logged In Info')
-    // logStats(userInfo);
   }
 
   const wzMatchDetails = await API.MWcombatwz(gamertag, platform);
@@ -44,22 +40,50 @@ exports.getStats = async ({ gamertag, platform }) => {
   const highestKills = matchesOfDay.map(match => match.playerStats.kills).sort((a, b) => b - a)[0];
   const mostDeaths = matchesOfDay.map(match => match.playerStats.deaths).sort((a, b) => b - a)[0];
 
-  // const latestMatch = wzMatchDetails.matches[0];
-
-  // const { matchID } = latestMatch;
-  // const fullMatch = await API.MWFullMatchInfowz(matchID, CREDENTIALS.platform);
-  // console.log('Full Match');
-  // for (const [stat, value] of Object.entries(fullMatch.allPlayers[0].player)) {
-  //   console.log(stat, value);
-  // }
-
-  // const playerInMatch = fullMatch.allPlayers.find(entry => entry.player.username === CREDENTIALS.playerName);
-  // console.log('Player in allPlayers');
-  // console.log(playerInMatch);
-
   return {
     highestKills,
     mostDeaths
+  };
+};
+
+/**
+ * Get daily match stats from `players` ordered by kills, KD ratios.
+ * @param {{ gamertag, platform }[]} players list of player objects
+ */
+exports.getDailyStats = async (players) => {
+  if (CREDENTIALS.username && CREDENTIALS.password) {
+    await API.login(CREDENTIALS.username, CREDENTIALS.password);
+  }
+
+  const playerStats = await Promise.map(players, async ({ gamertag, platform }) => {
+    const { matches } = await API.MWcombatwz(gamertag, platform);
+    const matchesOfDay = matches.filter(match => {
+      const start = startOfDay(new Date());
+      const timestamp = new Date(match.utcEndSeconds * 1000);
+      const result = isAfter(timestamp, start);
+      return result;
+    });
+    
+    const stats = matchesOfDay.reduce((stats, match) => {
+      const { playerStats: { kills, kdRatio } } = match;
+      if (!stats.mostKills || stats.mostKills < kills) {
+        stats.mostKills = kills;
+      }
+      if (!stats.highestKD || stats.highestKD < kdRatio) {
+        stats.highestKD = kdRatio;
+      }
+      return stats;
+    }, {
+      mostKills: undefined,
+      highestKD: undefined,
+    });
+
+    return { gamertag, ...stats };
+  }, { concurrency: 0 });
+
+  return {
+    playerStatsByKills: playerStats.sort((a, b) => b.mostKills - a.mostKills),
+    playerStatsByRatio: playerStats.sort((a, b) => b.highestKD - a.highestKD)
   };
 };
 

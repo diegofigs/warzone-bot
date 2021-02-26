@@ -2,7 +2,7 @@ const fs = require('fs');
 const schedule = require('node-schedule');
 const Discord = require('discord.js');
 const { thumbnail, webhookConfig } = require('../config');
-const { emojis, getLeaderboard } = require('../core');
+const { emojis, getDailyStats } = require('../core');
 
 const rule = new schedule.RecurrenceRule();
 rule.minute = 0;
@@ -19,10 +19,10 @@ const { dailyStats } = webhookConfig;
 const webhookClient = new Discord.WebhookClient(dailyStats.webhookID, dailyStats.webhookToken);
 
 module.exports = {
-  name: 'dailyLeaderboard',
+  name: 'dailyStats',
   rule,
   execute: async (fireDate) => {
-    const { playerStatsByKills, playerStatsByRatio } = await getLeaderboard(players);
+    const { playerStatsByKills, playerStatsByRatio } = await getDailyStats(players);
     
     const killsFields = playerStatsByKills.map((player, position) => {
       const name = `${emojis[position+1]} **${player.gamertag}**`;
