@@ -1,11 +1,17 @@
 const WzApiFactory = require('call-of-duty-api');
+const bluebird = require('bluebird');
 const { isAfter, startOfDay } = require('date-fns');
+
+const emojis = require('./emojis');
 
 const CREDENTIALS = {
   username: process.env.WZ_USERNAME,
   password: process.env.WZ_PASSWORD
 };
 const API = WzApiFactory();
+const Promise = bluebird.Promise;
+
+exports.emojis = emojis;
 
 exports.getCareer = async ({ gamertag, platform }) => {
   if (CREDENTIALS.username && CREDENTIALS.password) {
@@ -54,5 +60,43 @@ exports.getStats = async ({ gamertag, platform }) => {
   return {
     highestKills,
     mostDeaths
+  };
+};
+
+/**
+ * 
+ * @param {Array<{ gamertag, platform }>} players list of player objects
+ */
+exports.getLeaderboard = async (players) => {
+  if (CREDENTIALS.username && CREDENTIALS.password) {
+    await API.login(CREDENTIALS.username, CREDENTIALS.password);
+  }
+
+  const playerStats = await Promise.map(players, async ({ gamertag, platform }) => {
+    const { matches } = await API.MWcombatwz(gamertag, platform);
+    
+    const stats = matches.reduce((stats, match) => {
+      const { playerStats: { kills, kdRatio } } = match;
+      if (!stats.mostKills || stats.mostKills < kills) {
+        stats.mostKills = kills;
+      }
+      if (!stats.highestKD || stats.highestKD < kdRatio) {
+        stats.highestKD = kdRatio;
+      }
+      return stats;
+    }, {
+      mostKills: undefined,
+      highestKD: undefined,
+    });
+
+    return { gamertag, ...stats };
+  }, { concurrency: 0 });
+
+  const playerStatsByKills = playerStats.sort((a, b) => b.mostKills - a.mostKills);
+  const playerStatsByRatio = playerStats.sort((a, b) => b.highestKD - a.highestKD);
+
+  return {
+    playerStatsByKills,
+    playerStatsByRatio
   };
 };
