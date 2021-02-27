@@ -80,18 +80,14 @@ exports.getDailyStats = async (players) => {
 
     return { gamertag, ...stats };
   }, { concurrency: 0 });
-
-  return {
-    playerStatsByKills: playerStats.sort((a, b) => b.mostKills - a.mostKills),
-    playerStatsByRatio: playerStats.sort((a, b) => b.highestKD - a.highestKD)
-  };
+  return playerStats;
 };
 
 /**
- * Get last 20 matches' stats from `players` ordered by kills, KD ratios.
+ * Get last 20 matches' stats from `players`.
  * @param {{ gamertag: string, platform: string }[]} players array of player objects
  */
-exports.getLeaderboard = async (players) => {
+exports.getRecentMatchStats = async (players) => {
   if (CREDENTIALS.username && CREDENTIALS.password) {
     await API.login(CREDENTIALS.username, CREDENTIALS.password);
   }
@@ -115,9 +111,5 @@ exports.getLeaderboard = async (players) => {
 
     return { gamertag, ...stats };
   }, { concurrency: 0 });
-
-  return {
-    playerStatsByKills: playerStats.sort((a, b) => b.mostKills - a.mostKills),
-    playerStatsByRatio: playerStats.sort((a, b) => b.highestKD - a.highestKD)
-  };
+  return playerStats;
 };
