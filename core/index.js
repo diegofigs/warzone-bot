@@ -1,6 +1,6 @@
 const WzApiFactory = require('call-of-duty-api');
 const bluebird = require('bluebird');
-const { isAfter, startOfDay } = require('date-fns');
+const { isAfter, startOfDay, addDays, subDays, isBefore, isWithinInterval } = require('date-fns');
 
 const emojis = require('./emojis');
 
@@ -48,21 +48,19 @@ exports.getStats = async ({ gamertag, platform }) => {
 
 /**
  * Get daily match stats from `players` ordered by kills, KD ratios.
- * @param {{ gamertag, platform }[]} players list of player objects
+ * @param {{ gamertag: string, platform: string }[]} players list of player objects
  */
 exports.getDailyStats = async (players) => {
   if (CREDENTIALS.username && CREDENTIALS.password) {
     await API.login(CREDENTIALS.username, CREDENTIALS.password);
   }
 
+  const today = startOfDay(new Date());
+  const yesterday = subDays(today, 1);
+  const interval = { start: yesterday, end: today };
   const playerStats = await Promise.map(players, async ({ gamertag, platform }) => {
     const { matches } = await API.MWcombatwz(gamertag, platform);
-    const matchesOfDay = matches.filter(match => {
-      const start = startOfDay(new Date());
-      const timestamp = new Date(match.utcEndSeconds * 1000);
-      const result = isAfter(timestamp, start);
-      return result;
-    });
+    const matchesOfDay = matches.filter(match => isWithinInterval(new Date(match.utcEndSeconds * 1000), interval));
     
     const stats = matchesOfDay.reduce((stats, match) => {
       const { playerStats: { kills, kdRatio } } = match;
@@ -80,7 +78,12 @@ exports.getDailyStats = async (players) => {
 
     return { gamertag, ...stats };
   }, { concurrency: 0 });
-  return playerStats;
+
+  const playerEntries = playerStats.filter(({ mostKills, highestKD }) => mostKills || highestKD);
+  const byKills = [...playerEntries].sort((a, b) => b.mostKills - a.mostKills);
+  const byKDR = [...playerEntries].sort((a, b) => b.highestKD - a.highestKD);
+
+  return { byKills, byKDR };
 };
 
 /**
@@ -111,5 +114,10 @@ exports.getRecentMatchStats = async (players) => {
 
     return { gamertag, ...stats };
   }, { concurrency: 0 });
-  return playerStats;
+
+  const playerEntries = playerStats.filter(({ mostKills, highestKD }) => mostKills || highestKD);
+  const byKills = [...playerEntries].sort((a, b) => b.mostKills - a.mostKills);
+  const byKDR = [...playerEntries].sort((a, b) => b.highestKD - a.highestKD);
+
+  return { byKills, byKDR };
 };
