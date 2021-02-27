@@ -18,13 +18,15 @@ const players = dataFiles.map(file => {
 const { dailyStats } = webhookConfig;
 const webhookClient = new Discord.WebhookClient(dailyStats.webhookID, dailyStats.webhookToken);
 
+const JOB_NAME = 'dailyStats';
 module.exports = {
-  name: 'dailyStats',
+  name: JOB_NAME,
   rule,
   execute: async (fireDate) => {
-    const playerStats = await getDailyStats(players);
+    console.log(`[${JOB_NAME}] started at ${fireDate}`);
+    const { byKills, byKDR } = await getDailyStats(players);
     
-    const killsFields = playerStats.sort((a, b) => b.mostKills - a.mostKills)
+    const killsFields = byKills
       .map((player, position) => {
         const name = `${emojis[position+1]} **${player.gamertag}**`;
         const value = `${player.mostKills} kills`;
@@ -40,7 +42,7 @@ module.exports = {
       .setFooter('This information is property of Infinity Ward');
     await webhookClient.send(killsLeaderboardEmbed);
 
-    const ratioFields = playerStats.sort((a, b) => b.highestKD - a.highestKD)
+    const ratioFields = byKDR
       .map((player, position) => {
         const name = `${emojis[position+1]} **${player.gamertag}**`;
         const value = `${player.highestKD} KD`;
@@ -56,6 +58,6 @@ module.exports = {
       .setFooter('This information is property of Infinity Ward');
     await webhookClient.send(ratioLeaderboardEmbed);
 
-    console.log('This job was supposed to run at ' + fireDate + ', but actually ran at ' + new Date());
+    console.log(`[${JOB_NAME}] finished at ${new Date()}`);
   }
 };
