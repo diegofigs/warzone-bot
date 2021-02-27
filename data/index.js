@@ -1,20 +1,20 @@
 module.exports = [
-  {
-    playerName: 'AcostaVIII',
-    gamertag: 'AcostaVIII'
-  },
+  // {
+  //   playerName: 'AcostaVIII',
+  //   gamertag: 'AcostaVIII'
+  // },
   {
     gamertag: 'canitopr81#1555983',
     platform: 'acti'
   },
-  {
-    playerName: 'Chiquilape',
-    gamertag: 'Chiquilape',
-  },
-  {
-    playerName: 'IParadox',
-    gamertag: 'IParadox'
-  },
+  // {
+  //   playerName: 'Chiquilape',
+  //   gamertag: 'Chiquilape',
+  // },
+  // {
+  //   playerName: 'IParadox',
+  //   gamertag: 'IParadox'
+  // },
   {
     playerName: 'FernanJ',
     gamertag: 'FernanJ',
