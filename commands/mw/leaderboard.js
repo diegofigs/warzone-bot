@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const { emojis, getRecentMatchStats } = require('../../core');
 const { thumbnail } = require('../../config');
-const players = require('../data');
+const players = require('../../data');
 
 module.exports = {
   name: 'leaderboard',
