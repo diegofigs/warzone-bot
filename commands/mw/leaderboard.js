@@ -1,13 +1,7 @@
-const fs = require('fs');
 const Discord = require('discord.js');
 const { emojis, getRecentMatchStats } = require('../../core');
 const { thumbnail } = require('../../config');
-
-const dataFiles = fs.readdirSync(`./data`).filter(file => file.endsWith('.js'));
-const players = dataFiles.map(file => {
-  const player = require(`../../data/${file}`);
-  return player;
-});
+const players = require('../data');
 
 module.exports = {
   name: 'leaderboard',

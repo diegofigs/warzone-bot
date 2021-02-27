@@ -1,19 +1,13 @@
-const fs = require('fs');
 const schedule = require('node-schedule');
 const Discord = require('discord.js');
 const { thumbnail, webhookConfig } = require('../config');
 const { emojis, getDailyStats } = require('../core');
+const players = require('../data');
 
 const rule = new schedule.RecurrenceRule();
 rule.minute = 0;
 rule.hour = 0;
 rule.tz = 'America/Puerto_Rico';
-
-const dataFiles = fs.readdirSync(`./data`).filter(file => file.endsWith('.js'));
-const players = dataFiles.map(file => {
-  const player = require(`../data/${file}`);
-  return player;
-});
 
 const { dailyStats } = webhookConfig;
 const webhookClient = new Discord.WebhookClient(dailyStats.webhookID, dailyStats.webhookToken);
