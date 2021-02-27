@@ -26,7 +26,7 @@ module.exports = {
         .setTitle(`Kills Leaderboard`)
         .setDescription(`Ordered by last 20's highest kill games`)
         .setThumbnail(thumbnail)
-        .addFields(killsFields)
+        .addFields(...killsFields)
         .setTimestamp()
         .setFooter('This information is property of Infinity Ward');
       await message.channel.send(killsLeaderboardEmbed);
@@ -41,7 +41,7 @@ module.exports = {
         .setTitle(`KD Leaderboard`)
         .setDescription(`Ordered by last 20's highest KD ratio games`)
         .setThumbnail(thumbnail)
-        .addFields(ratioFields)
+        .addFields(...ratioFields)
         .setTimestamp()
         .setFooter('This information is property of Infinity Ward');
       await message.channel.send(ratioLeaderboardEmbed);
