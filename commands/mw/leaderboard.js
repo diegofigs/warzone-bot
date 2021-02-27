@@ -15,14 +15,13 @@ module.exports = {
   description: `Fetch squad's rankings ordered by Kills and KD`,
   execute: async (message) => {
     try {
-      const playerStats = await getRecentMatchStats(players);
+      const { byKills, byKDR } = await getRecentMatchStats(players);
 
-      const killsFields = playerStats.sort((a, b) => b.mostKills - a.mostKills)
-        .map((player, position) => {
-          const name = `${emojis[position + 1]} **${player.gamertag}**`;
-          const value = `${player.mostKills} Kills`;
-          return { name, value };
-        });
+      const killsFields = byKills.map((player, position) => {
+        const name = `${emojis[position + 1]} **${player.gamertag}**`;
+        const value = `${player.mostKills} Kills`;
+        return { name, value };
+      });
       const killsLeaderboardEmbed = new Discord.MessageEmbed()
         .setColor('#0099ff')
         .setTitle(`Kills Leaderboard`)
@@ -33,12 +32,11 @@ module.exports = {
         .setFooter('This information is property of Infinity Ward');
       await message.channel.send(killsLeaderboardEmbed);
 
-      const ratioFields = playerStats.sort((a, b) => b.highestKD - a.highestKD)
-        .map((player, position) => {
-          const name = `${emojis[position + 1]} **${player.gamertag}**`;
-          const value = `${player.highestKD} KD`;
-          return { name, value };
-        });
+      const ratioFields = byKDR.map((player, position) => {
+        const name = `${emojis[position + 1]} **${player.gamertag}**`;
+        const value = `${player.highestKD} KD`;
+        return { name, value };
+      });
       const ratioLeaderboardEmbed = new Discord.MessageEmbed()
         .setColor('#0099ff')
         .setTitle(`KD Leaderboard`)
