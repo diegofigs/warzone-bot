@@ -22,32 +22,34 @@ module.exports = {
   name: 'dailyStats',
   rule,
   execute: async (fireDate) => {
-    const { playerStatsByKills, playerStatsByRatio } = await getDailyStats(players);
+    const playerStats = await getDailyStats(players);
     
-    const killsFields = playerStatsByKills.map((player, position) => {
-      const name = `${emojis[position+1]} **${player.gamertag}**`;
-      const value = player.mostKills;
-      return { name, value };
-    });
+    const killsFields = playerStats.sort((a, b) => b.mostKills - a.mostKills)
+      .map((player, position) => {
+        const name = `${emojis[position+1]} **${player.gamertag}**`;
+        const value = `${player.mostKills} kills`;
+        return { name, value };
+      });
     const killsLeaderboardEmbed = new Discord.MessageEmbed()
       .setColor('#0099ff')
       .setTitle(`Kills Leaderboard`)
-      .setDescription(`Ordered by today's highest kill games`)
+      .setDescription(`Based on today's games`)
       .setThumbnail(thumbnail)
       .addFields(killsFields)
       .setTimestamp()
       .setFooter('This information is property of Infinity Ward');
     await webhookClient.send(killsLeaderboardEmbed);
 
-    const ratioFields = playerStatsByRatio.map((player, position) => {
-      const name = `${emojis[position+1]} **${player.gamertag}**`;
-      const value = player.highestKD;
-      return { name, value };
-    });
+    const ratioFields = playerStats.sort((a, b) => b.highestKD - a.highestKD)
+      .map((player, position) => {
+        const name = `${emojis[position+1]} **${player.gamertag}**`;
+        const value = `${player.highestKD} KD`;
+        return { name, value };
+      });
     const ratioLeaderboardEmbed = new Discord.MessageEmbed()
       .setColor('#0099ff')
       .setTitle(`KD Leaderboard`)
-      .setDescription(`Ordered by today's highest KD ratios`)
+      .setDescription(`Based on today's games`)
       .setThumbnail(thumbnail)
       .addFields(ratioFields)
       .setTimestamp()
