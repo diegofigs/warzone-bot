@@ -1,6 +1,6 @@
 const WzApiFactory = require('call-of-duty-api');
 const bluebird = require('bluebird');
-const { isAfter, startOfDay, addDays, subDays, isBefore, isWithinInterval } = require('date-fns');
+const { isAfter, startOfDay, subDays, isWithinInterval } = require('date-fns');
 
 const emojis = require('./emojis');
 
@@ -31,12 +31,8 @@ exports.getStats = async ({ gamertag, platform }) => {
   }
 
   const wzMatchDetails = await API.MWcombatwz(gamertag, platform);
-  const matchesOfDay = wzMatchDetails.matches.filter(match => {
-    const start = startOfDay(new Date());
-    const timestamp = new Date(match.utcEndSeconds * 1000);
-    const result = isAfter(timestamp, start);
-    return result;
-  });
+  const start = startOfDay(new Date());
+  const matchesOfDay = wzMatchDetails.matches.filter(match => isAfter(new Date(match.utcEndSeconds * 1000), start));
   const highestKills = matchesOfDay.map(match => match.playerStats.kills).sort((a, b) => b - a)[0];
   const mostDeaths = matchesOfDay.map(match => match.playerStats.deaths).sort((a, b) => b - a)[0];
 
