@@ -42,9 +42,7 @@ module.exports = {
       repo : 'git@github.com:diegofigs/warzone-bot.git',
       path : '/root/warzone-bot',
       'pre-deploy-local': '',
-      'post-deploy' : 'source ~/.bashrc && \
-        nvm use default && \
-        npm install && \
+      'post-deploy' : 'npm install && \
         pm2 reload ecosystem.config.js --env production',
       'pre-setup': ''
     }
