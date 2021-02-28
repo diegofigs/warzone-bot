@@ -11,3 +11,11 @@ for (const jobName of jobFiles) {
   schedule.scheduleJob(name, frequency, execute);
   console.log(`Started at ${new Date().toLocaleString('en')}`);
 }
+
+process.on('SIGINT', function(msg) {  
+	// process reload ongoing
+	// close connections, clear cache, etc
+	// by default, you have 1600ms
+	console.log(msg + ' Grafully shutting down');
+	process.exit(0);
+});
