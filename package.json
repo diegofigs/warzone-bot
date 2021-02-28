@@ -19,13 +19,12 @@
     "eslint": "^7.20.0"
   },
   "scripts": {
-    "start": "node .",
+    "start": "node -r dotenv/config .",
+    "start:schedule": "node -r dotenv/config schedule",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
-    "pm2:start": "pm2 start index.js --name wz-bot --time --watch",
-    "pm2:stop": "pm2 stop wz-bot",
-    "pm2:logs": "pm2 logs wz-bot",
-    "pm2:schedule": "pm2 start schedule.js --name schedule --time --watch"
+    "pm2:dev": "pm2 start ecosystem.config.js",
+    "pm2:prod": "pm2 start ecosystem.config.js --env production"
   },
   "author": "Diego Figueroa <diego@dfigueroa.me>",
   "license": "ISC"

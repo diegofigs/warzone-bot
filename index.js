@@ -1,6 +1,3 @@
-const dotenv = require('dotenv');
-dotenv.config();
-
 const fs = require('fs');
 const Discord = require('discord.js');
 
@@ -28,3 +25,11 @@ for (const file of eventFiles) {
 
 // Log our bot in using the token from https://discord.com/developers/applications
 client.login(process.env.DISCORD_TOKEN);
+
+process.on('SIGINT', function(msg) {  
+	// process reload ongoing
+	// close connections, clear cache, etc
+	// by default, you have 1600ms
+	console.log(msg + ' Grafully shutting down');
+	process.exit(0);
+});
