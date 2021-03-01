@@ -14,7 +14,7 @@ module.exports = [
   {
     playerName: 'IParadox',
     gamertag: 'IParadox#6380273',
-    // platform: 'acti'
+    platform: 'acti'
   },
   {
     playerName: 'FernanJ',
