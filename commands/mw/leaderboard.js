@@ -13,6 +13,9 @@ module.exports = {
     const [recent] = args;
     try {
       const { byKills, byKDR } = recent ? await getDailyStats(players) : await getRecentMatchStats(players);
+      const embedColor = '#0099ff';
+      const description = `Based on ${recent ? "today's" : "last 20"} matches`;
+      const footer = 'This information is property of Infinity Ward';
 
       const killsFields = byKills.map((player, position) => {
         const name = `${emojis[position + 1]} **${player.gamertag}**`;
@@ -20,13 +23,13 @@ module.exports = {
         return { name, value };
       });
       const killsLeaderboardEmbed = new Discord.MessageEmbed()
-        .setColor('#0099ff')
+        .setColor(embedColor)
         .setTitle(`Kills Leaderboard`)
-        .setDescription(`Based on last 20 matches`)
+        .setDescription(description)
         .setThumbnail(thumbnail)
         .addFields(killsFields)
         .setTimestamp()
-        .setFooter('This information is property of Infinity Ward');
+        .setFooter(footer);
       await message.channel.send(killsLeaderboardEmbed);
 
       const ratioFields = byKDR.map((player, position) => {
@@ -35,13 +38,13 @@ module.exports = {
         return { name, value };
       });
       const ratioLeaderboardEmbed = new Discord.MessageEmbed()
-        .setColor('#0099ff')
+        .setColor(embedColor)
         .setTitle(`KD Leaderboard`)
-        .setDescription(`Based on last 20 matches`)
+        .setDescription(description)
         .setThumbnail(thumbnail)
         .addFields(ratioFields)
         .setTimestamp()
-        .setFooter('This information is property of Infinity Ward');
+        .setFooter(footer);
       await message.channel.send(ratioLeaderboardEmbed);
     } catch (e) {
       console.log('error', e);
