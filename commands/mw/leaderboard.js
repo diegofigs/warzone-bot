@@ -1,15 +1,18 @@
 const Discord = require('discord.js');
-const { emojis, getRecentMatchStats } = require('../../core');
+const { emojis, getRecentMatchStats, getDailyStats } = require('../../core');
 const { thumbnail } = require('../../config');
 const players = require('../../data');
 
 module.exports = {
   name: 'leaderboard',
   aliases: ['rankings'],
+  args: false,
+  usage: '<recent?>',
   description: `Fetch squad's rankings ordered by Kills and KD`,
-  execute: async (message) => {
+  execute: async (message, args) => {
+    const [recent] = args;
     try {
-      const { byKills, byKDR } = await getRecentMatchStats(players);
+      const { byKills, byKDR } = recent ? await getDailyStats(players) : await getRecentMatchStats(players);
 
       const killsFields = byKills.map((player, position) => {
         const name = `${emojis[position + 1]} **${player.gamertag}**`;
