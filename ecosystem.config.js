@@ -2,6 +2,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const merge_logs = true;
+const ignore_watch = ['.history', 'node_modules'];
 const env = {
   NODE_ENV: 'development',
   DISCORD_TOKEN: process.env.DISCORD_TOKEN,
@@ -20,7 +21,7 @@ module.exports = {
     name: 'wz-bot',
     script: './index.js',
     watch: '.',
-    ignore_watch: ['.history'],
+    ignore_watch,
     merge_logs,
     env,
     env_production
@@ -28,7 +29,7 @@ module.exports = {
     name: 'schedule',
     script: './schedule.js',
     watch: '.',
-    ignore_watch: ['.history'],
+    ignore_watch,
     merge_logs,
     env,
     env_production
