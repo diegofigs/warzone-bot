@@ -11,10 +11,11 @@ module.exports = [
   //   playerName: 'Chiquilape',
   //   gamertag: 'Chiquilape',
   // },
-  // {
-  //   playerName: 'IParadox',
-  //   gamertag: 'IParadox'
-  // },
+  {
+    playerName: 'IParadox',
+    gamertag: 'IParadox#6380273',
+    // platform: 'acti'
+  },
   {
     playerName: 'FernanJ',
     gamertag: 'FernanJ',
