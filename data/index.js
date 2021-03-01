@@ -7,11 +7,11 @@ module.exports = [
     gamertag: 'canitopr81#1555983',
     platform: 'acti'
   },
-  {
-    playerName: 'Chiquilape',
-    gamertag: 'Chiquilape#9723869',
-    platform: 'acti'
-  },
+  // {
+  //   playerName: 'Chiquilape',
+  //   gamertag: 'Chiquilape03#1195',
+  //   platform: 'battle',
+  // },
   {
     playerName: 'IParadox',
     gamertag: 'IParadox#6380273',
