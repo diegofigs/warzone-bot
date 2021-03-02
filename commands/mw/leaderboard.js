@@ -17,9 +17,10 @@ module.exports = {
       const description = `Based on ${recent ? "today's" : "last 20"} matches`;
       const footer = 'This information is property of Infinity Ward';
 
-      const killsFields = byKills.map((player, position) => {
-        const name = `${emojis[position + 1]} **${player.gamertag}**`;
-        const value = `${player.mostKills} Kills`;
+      const killsFields = byKills.map(({ gamertag, mostKills }, i) => {
+        const position = i + 1;
+        const name = `${getNumberEmoji(position)} ${getPositionEmoji(position)} **${gamertag}**`;
+        const value = `${getKillAccoladeEmoji(mostKills)} ${mostKills} Kills`;
         return { name, value };
       });
       const killsLeaderboardEmbed = new Discord.MessageEmbed()
@@ -32,9 +33,10 @@ module.exports = {
         .setFooter(footer);
       await message.channel.send(killsLeaderboardEmbed);
 
-      const ratioFields = byKDR.map((player, position) => {
-        const name = `${emojis[position + 1]} **${player.gamertag}**`;
-        const value = `${player.highestKD} KD`;
+      const ratioFields = byKDR.map(({ gamertag, highestKD }, i) => {
+        const position = i + 1;
+        const name = `${getNumberEmoji(position)} ${getPositionEmoji(position)} **${gamertag}**`;
+        const value = `${getKillDeathAccoladeEmoji(highestKD)} ${highestKD} KD`;
         return { name, value };
       });
       const ratioLeaderboardEmbed = new Discord.MessageEmbed()
@@ -51,3 +53,63 @@ module.exports = {
     }
   },
 };
+
+const getPositionEmoji = position => {
+  switch (position) {
+    case 1:
+      return emojis.crown;
+    case 2:
+      return emojis.runner;
+
+  }
+};
+
+const getNumberEmoji = (position) => {
+  return emojis[position];
+};
+
+const HIGH_KILL_THRESHOLD = 20;
+const GREAT_KILL_THRESHOLD = 13;
+const GOOD_KILL_THRESHOLD = 10;
+const NICE_KILL_THRESHOLD = 5;
+const CHURRO = 1;
+const DONUT = 0;
+const getKillAccoladeEmoji = (kills) => {
+  if (kills >= HIGH_KILL_THRESHOLD) {
+    return emojis.bomb;
+  }
+  if (kills >= GREAT_KILL_THRESHOLD) {
+    return emojis.green_heart;
+  }
+  if (kills >= GOOD_KILL_THRESHOLD) {
+    return emojis.yellow_heart;
+  }
+  if (kills >= NICE_KILL_THRESHOLD) {
+    return emojis.red_heart;
+  }
+  if (kills === CHURRO) {
+    return emojis.bread;
+  }
+  if (kills === DONUT) {
+    return emojis.donut;
+  }
+  return '';
+};
+
+const HIGH_KD_THRESHOLD = 10;
+const GREAT_KD_THRESHOLD = 6;
+const GOOD_KD_THRESHOLD = 3;
+const getKillDeathAccoladeEmoji = (kd) => {
+  if (kd >= HIGH_KD_THRESHOLD) {
+    return emojis.green_heart;
+  }
+  if (kd >= GREAT_KD_THRESHOLD) {
+    return emojis.yellow_heart;
+  }
+  if (kd >= GOOD_KD_THRESHOLD) {
+    return emojis.red_heart;
+  }
+  return '';
+};
+
+
