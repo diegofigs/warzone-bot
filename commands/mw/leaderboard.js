@@ -61,7 +61,7 @@ const getPositionEmoji = position => {
     case 2:
       return emojis.runner;
     default:
-      '';
+      return '';
   }
 };
 
