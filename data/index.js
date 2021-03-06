@@ -32,11 +32,11 @@ module.exports = [
     gamertag: 'L u c i f e r#9544650',
     platform: 'acti'
   },
-  {
-    playerName: 'Paralizado',
-    gamertag: 'Paralizado#1884',
-    platform: 'battle'
-  },
+  // {
+  //   playerName: 'Paralizado',
+  //   gamertag: 'Paralizado#1884',
+  //   platform: 'battle'
+  // },
   {
     gamertag: 'raulskein_#2257774',
     platform: 'acti'
