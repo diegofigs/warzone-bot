@@ -1,21 +1,68 @@
 const WzApiFactory = require('call-of-duty-api');
 const bluebird = require('bluebird');
-const { isAfter, startOfDay, subDays, isWithinInterval } = require('date-fns');
+const { isWithinInterval } = require('date-fns');
 
-const emojis = require('./emojis');
+const API = WzApiFactory();
 
 const CREDENTIALS = {
   username: process.env.WZ_USERNAME,
-  password: process.env.WZ_PASSWORD
+  password: process.env.WZ_PASSWORD,
 };
-const API = WzApiFactory();
-const Promise = bluebird.Promise;
+const CAREER = { kills: undefined, wins: undefined, kdRatio: undefined };
+const PLAYER_HIGHLIGHTS = { mostKills: undefined, highestKD: undefined };
+const PLAYER_LEADERBOARD = { byKills: [], byKDR: [] };
 
-exports.emojis = emojis;
+const loginToCOD = async () => {
+  try {
+    if (CREDENTIALS.username && CREDENTIALS.password) {
+      await API.login(CREDENTIALS.username, CREDENTIALS.password);
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
 
-exports.getCareer = async ({ gamertag, platform }) => {
-  if (CREDENTIALS.username && CREDENTIALS.password) {
-    await API.login(CREDENTIALS.username, CREDENTIALS.password);
+function getMatchEndTime(match) {
+  return new Date(match.utcEndSeconds * 1000);
+}
+
+function findMatchesInInterval(matches, interval) {
+  if (interval) {
+    return matches.filter((match) => isWithinInterval(getMatchEndTime(match), interval));
+  }
+  return matches;
+}
+
+async function fetchPlayerHighlights({ gamertag, platform }, interval) {
+  try {
+    const { matches } = await API.MWcombatwz(gamertag, platform);
+    const matchesWithinInterval = findMatchesInInterval(matches, interval);
+
+    const stats = matchesWithinInterval.reduce(
+      (highlights, match) => {
+        const { mostKills, highestKD } = highlights;
+        const { kills, kdRatio } = match.playerStats;
+
+        return {
+          mostKills: !mostKills || mostKills < kills ? kills : mostKills,
+          highestKD: !highestKD || highestKD < kdRatio ? kdRatio : highestKD,
+        };
+      },
+      { ...PLAYER_HIGHLIGHTS }
+    );
+    return { gamertag, ...stats };
+  } catch (error) {
+    return PLAYER_HIGHLIGHTS;
+  }
+}
+
+const getCareer = async ({ gamertag, platform }) => {
+  const loggedIn = await loginToCOD();
+  if (!loggedIn) {
+    return CAREER;
   }
 
   const career = await API.MWBattleData(gamertag, platform);
@@ -24,56 +71,40 @@ exports.getCareer = async ({ gamertag, platform }) => {
 
   return { kills, wins, kdRatio };
 };
-
-exports.getStats = async ({ gamertag, platform }) => {
-  if (CREDENTIALS.username && CREDENTIALS.password) {
-    await API.login(CREDENTIALS.username, CREDENTIALS.password);
-  }
-
-  const wzMatchDetails = await API.MWcombatwz(gamertag, platform);
-  const start = startOfDay(new Date());
-  const matchesOfDay = wzMatchDetails.matches.filter(match => isAfter(new Date(match.utcEndSeconds * 1000), start));
-  const highestKills = matchesOfDay.map(match => match.playerStats.kills).sort((a, b) => b - a)[0];
-  const mostDeaths = matchesOfDay.map(match => match.playerStats.deaths).sort((a, b) => b - a)[0];
-
-  return {
-    highestKills,
-    mostDeaths
-  };
-};
+exports.getCareer = getCareer;
 
 /**
- * Get daily match stats from `players` ordered by kills, KD ratios.
- * @param {{ gamertag: string, platform: string }[]} players list of player objects
+ * Get match stats from `player`; delimited by an optional `interval` parameter.
+ * @param {{ gamertag: string, platform: string }} player player object with `gamertag`, `platform`
+ * @param {{ start: Date, end: Date }} interval interval object with `start`, `end` dates
  */
-exports.getDailyStats = async (players) => {
-  if (CREDENTIALS.username && CREDENTIALS.password) {
-    await API.login(CREDENTIALS.username, CREDENTIALS.password);
+const getPlayerHighlights = async (player, interval) => {
+  const loggedIn = await loginToCOD();
+  if (!loggedIn) {
+    return PLAYER_HIGHLIGHTS;
   }
 
-  const today = startOfDay(new Date());
-  const yesterday = subDays(today, 1);
-  const interval = { start: yesterday, end: today };
-  const playerStats = await Promise.map(players, async ({ gamertag, platform }) => {
-    const { matches } = await API.MWcombatwz(gamertag, platform);
-    const matchesOfDay = matches.filter(match => isWithinInterval(new Date(match.utcEndSeconds * 1000), interval));
-    
-    const stats = matchesOfDay.reduce((stats, match) => {
-      const { playerStats: { kills, kdRatio } } = match;
-      if (!stats.mostKills || stats.mostKills < kills) {
-        stats.mostKills = kills;
-      }
-      if (!stats.highestKD || stats.highestKD < kdRatio) {
-        stats.highestKD = kdRatio;
-      }
-      return stats;
-    }, {
-      mostKills: undefined,
-      highestKD: undefined,
-    });
+  // Fail gracefully if a player's stats can't be fetched / aggregated
+  try {
+    return await fetchPlayerHighlights(player, interval);
+  } catch (error) {
+    return PLAYER_HIGHLIGHTS;
+  }
+};
+exports.getPlayerHighlights = getPlayerHighlights;
 
-    return { gamertag, ...stats };
-  }, { concurrency: 0 });
+/**
+ * Get match stats from `players` ordered by kills, KD ratios; delimited
+ * by an optional `interval` parameter.
+ * @param {any[]} players list of player objects with `gamertag`, `platform`
+ * @param {{ start: Date, end: Date }} interval interval object with `start`, `end` dates
+ */
+const getHighlights = async (players, interval) => {
+  const loggedIn = await loginToCOD();
+  if (!loggedIn) { return PLAYER_LEADERBOARD; }
+
+  const playerStats = await bluebird.map(players,
+    (player) => fetchPlayerHighlights(player, interval), { concurrency: 0 });
 
   const playerEntries = playerStats.filter(({ mostKills, highestKD }) => mostKills || highestKD);
   const byKills = [...playerEntries].sort((a, b) => b.mostKills - a.mostKills);
@@ -81,39 +112,4 @@ exports.getDailyStats = async (players) => {
 
   return { byKills, byKDR };
 };
-
-/**
- * Get last 20 matches' stats from `players`.
- * @param {{ gamertag: string, platform: string }[]} players array of player objects
- */
-exports.getRecentMatchStats = async (players) => {
-  if (CREDENTIALS.username && CREDENTIALS.password) {
-    await API.login(CREDENTIALS.username, CREDENTIALS.password);
-  }
-
-  const playerStats = await Promise.map(players, async ({ gamertag, platform }) => {
-    const { matches } = await API.MWcombatwz(gamertag, platform);
-    
-    const stats = matches.reduce((stats, match) => {
-      const { playerStats: { kills, kdRatio } } = match;
-      if (!stats.mostKills || stats.mostKills < kills) {
-        stats.mostKills = kills;
-      }
-      if (!stats.highestKD || stats.highestKD < kdRatio) {
-        stats.highestKD = kdRatio;
-      }
-      return stats;
-    }, {
-      mostKills: undefined,
-      highestKD: undefined,
-    });
-
-    return { gamertag, ...stats };
-  }, { concurrency: 0 });
-
-  const playerEntries = playerStats.filter(({ mostKills, highestKD }) => mostKills || highestKD);
-  const byKills = [...playerEntries].sort((a, b) => b.mostKills - a.mostKills);
-  const byKDR = [...playerEntries].sort((a, b) => b.highestKD - a.highestKD);
-
-  return { byKills, byKDR };
-};
+exports.getHighlights = getHighlights;

@@ -4,14 +4,14 @@ const { thumbnail } = require('../../config');
 
 module.exports = {
   name: 'career',
-	description: 'Fetch Ranked BR Kills, Wins, KD',
+  description: 'Fetch Ranked BR Kills, Wins, KD',
   args: true,
   usage: '<gamertag> <platform>',
-	execute: async (message, args) => {
+  execute: async (message, args) => {
     const [gamertag, platform] = args;
     try {
       const { kills, wins, kdRatio } = await getCareer({ gamertag, platform });
-      const kd = Math.floor(kdRatio* 100) / 100;
+      const kd = Math.floor(kdRatio * 100) / 100;
       const careerEmbed = new Discord.MessageEmbed()
         .setColor('#0099ff')
         .setTitle(`${gamertag}'s BR Career`)
