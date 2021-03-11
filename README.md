@@ -19,6 +19,8 @@ $ nvm use
   npm run pm2:dev
 ```
 
+## Commiting
+Project uses `commitizen` and an emoji adapter to generate commits and keep a consistent commit style. After `npm i` you can commit anything added to your local staged changes by running `npm run cm` and following along the interactive prompt.
 ## Description
 Repository defines two main processes called index.js (bot) and background process schedule.js (schedule).
 File structure is folder-by-type and contains 5 sub packages
