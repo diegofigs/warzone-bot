@@ -16,6 +16,8 @@
     "node-schedule": "^2.0.0"
   },
   "devDependencies": {
+    "commitizen": "^4.2.3",
+    "cz-conventional-changelog-emoji": "^0.1.0",
     "eslint": "^7.21.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
@@ -27,11 +29,17 @@
     "start:schedule": "node -r dotenv/config schedule",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
+    "cm": "cz",
     "pm2:dev": "pm2 start ecosystem.config.js",
     "pm2:prod": "pm2 start ecosystem.config.js --env production",
     "pm2:deploy": "pm2 deploy ecosystem.config.js production",
     "prepare": "husky install"
   },
   "author": "Diego Figueroa <diego@dfigueroa.me>",
-  "license": "ISC"
+  "license": "ISC",
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog-emoji"
+    }
+  }
 }
