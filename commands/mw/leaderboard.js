@@ -1,60 +1,24 @@
 const Discord = require('discord.js');
-const { emojis, getRecentMatchStats, getDailyStats } = require('../../core');
-const { thumbnail } = require('../../config');
+const { startOfDay, subDays } = require('date-fns');
+
+const { getHighlights } = require('../../core');
+const { thumbnail, emojis } = require('../../config');
 const players = require('../../data');
 
-module.exports = {
-  name: 'leaderboard',
-  aliases: ['rankings'],
-  args: false,
-  usage: '<recent?>',
-  description: `Fetch squad's rankings ordered by Kills and KD`,
-  execute: async (message, args) => {
-    const [recent] = args;
-    try {
-      const { byKills, byKDR } = recent ? await getDailyStats(players) : await getRecentMatchStats(players);
-      const embedColor = '#0099ff';
-      const description = `Based on ${recent ? "today's" : "last 20"} matches`;
-      const footer = 'This information is property of Infinity Ward';
-
-      const killsFields = byKills.map(({ gamertag, mostKills }, i) => {
-        const position = i + 1;
-        const name = `${getNumberEmoji(position)} ${getPositionEmoji(position)} **${gamertag}**`;
-        const value = `${getKillAccoladeEmoji(mostKills)} ${mostKills} Kills`;
-        return { name, value };
-      });
-      const killsLeaderboardEmbed = new Discord.MessageEmbed()
-        .setColor(embedColor)
-        .setTitle(`Kills Leaderboard`)
-        .setDescription(description)
-        .setThumbnail(thumbnail)
-        .addFields(killsFields)
-        .setTimestamp()
-        .setFooter(footer);
-      await message.channel.send(killsLeaderboardEmbed);
-
-      const ratioFields = byKDR.map(({ gamertag, highestKD }, i) => {
-        const position = i + 1;
-        const name = `${getNumberEmoji(position)} ${getPositionEmoji(position)} **${gamertag}**`;
-        const value = `${getKillDeathAccoladeEmoji(highestKD)} ${highestKD} KD`;
-        return { name, value };
-      });
-      const ratioLeaderboardEmbed = new Discord.MessageEmbed()
-        .setColor(embedColor)
-        .setTitle(`KD Leaderboard`)
-        .setDescription(description)
-        .setThumbnail(thumbnail)
-        .addFields(ratioFields)
-        .setTimestamp()
-        .setFooter(footer);
-      await message.channel.send(ratioLeaderboardEmbed);
-    } catch (e) {
-      console.log('error', e);
-    }
-  },
+const getIntervalFromTimeframe = (timeframe) => {
+  const now = new Date();
+  switch (timeframe) {
+    case 'today':
+      return { start: startOfDay(now), end: now };
+    case 'yesterday':
+      return { start: startOfDay(subDays(now, 1)), end: startOfDay(now) };
+    case '':
+    default:
+      return undefined;
+  }
 };
 
-const getPositionEmoji = position => {
+const getPositionEmoji = (position) => {
   switch (position) {
     case 1:
       return emojis.crown;
@@ -65,9 +29,7 @@ const getPositionEmoji = position => {
   }
 };
 
-const getNumberEmoji = (position) => {
-  return emojis[position];
-};
+const getNumberEmoji = (position) => emojis[position];
 
 const HIGH_KILL_THRESHOLD = 20;
 const GREAT_KILL_THRESHOLD = 13;
@@ -113,4 +75,55 @@ const getKillDeathAccoladeEmoji = (kd) => {
   return '';
 };
 
+module.exports = {
+  name: 'leaderboard',
+  aliases: ['rankings'],
+  args: false,
+  usage: '<timeframe? today|yesterday>',
+  description: 'Fetch squad\'s rankings ordered by Kills and KD',
+  execute: async (message, args) => {
+    const [timeframe] = args;
+    const interval = getIntervalFromTimeframe(timeframe);
 
+    try {
+      const { byKills, byKDR } = await getHighlights(players, interval);
+      const embedColor = '#0099ff';
+      const description = `Based on ${timeframe ? `${timeframe}'s` : 'last 20'} matches`;
+      const footer = 'This information is property of Infinity Ward';
+
+      const killsFields = byKills.map(({ gamertag, mostKills }, i) => {
+        const position = i + 1;
+        const name = `${getNumberEmoji(position)} ${getPositionEmoji(position)} **${gamertag}**`;
+        const value = `${getKillAccoladeEmoji(mostKills)} ${mostKills} Kills`;
+        return { name, value };
+      });
+      const killsLeaderboardEmbed = new Discord.MessageEmbed()
+        .setColor(embedColor)
+        .setTitle('Kills Leaderboard')
+        .setDescription(description)
+        .setThumbnail(thumbnail)
+        .addFields(killsFields)
+        .setTimestamp()
+        .setFooter(footer);
+      await message.channel.send(killsLeaderboardEmbed);
+
+      const ratioFields = byKDR.map(({ gamertag, highestKD }, i) => {
+        const position = i + 1;
+        const name = `${getNumberEmoji(position)} ${getPositionEmoji(position)} **${gamertag}**`;
+        const value = `${getKillDeathAccoladeEmoji(highestKD)} ${highestKD} KD`;
+        return { name, value };
+      });
+      const ratioLeaderboardEmbed = new Discord.MessageEmbed()
+        .setColor(embedColor)
+        .setTitle('KD Leaderboard')
+        .setDescription(description)
+        .setThumbnail(thumbnail)
+        .addFields(ratioFields)
+        .setTimestamp()
+        .setFooter(footer);
+      await message.channel.send(ratioLeaderboardEmbed);
+    } catch (e) {
+      console.error('error', e);
+    }
+  },
+};

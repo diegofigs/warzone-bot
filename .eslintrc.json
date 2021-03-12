@@ -1,5 +1,7 @@
 {
-	"extends": "eslint:recommended",
+	"extends": [
+		"airbnb-base"
+	],
 	"env": {
 		"node": true,
 		"es6": true
@@ -8,6 +10,7 @@
 		"ecmaVersion": 2019
 	},
 	"rules": {
-    "semi": ["error", "always"]
+    "semi": ["error", "always"],
+		"comma-dangle": "off"
 	}
 }
