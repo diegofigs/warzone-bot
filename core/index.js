@@ -1,4 +1,5 @@
 const bluebird = require('bluebird');
+const fetch = require('node-fetch');
 
 const API = 'https://wz-bot.vercel.app/api';
 
