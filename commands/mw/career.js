@@ -14,13 +14,9 @@ module.exports = {
       message.channel.send('Bad Request: operation requires gamertag, platform');
       return;
     }
-    console.log(`Gamertag: ${gamertag}`);
-    console.log(`Platform: ${platform}`);
-
     try {
       const { kills, wins, kdRatio } = await getCareer({ gamertag, platform });
       const kd = Math.floor(kdRatio * 100) / 100;
-      console.log(kills, kd);
       const careerEmbed = new MessageEmbed()
         .setColor('#0099ff')
         .setTitle(`${gamertag}'s BR Career`)
@@ -35,6 +31,7 @@ module.exports = {
         .setFooter('This information is property of Infinity Ward');
       message.channel.send(careerEmbed);
     } catch (error) {
+      console.error(error);
       message.channel.send('Not Found: error fetching player data');
     }
   },
