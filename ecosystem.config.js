@@ -36,14 +36,13 @@ module.exports = {
 
   deploy : {
     production : {
-      user : process.env.SSH_USERNAME,
+      user : 'diego',
       host : process.env.SSH_HOST,
       ref  : 'origin/main',
       repo : 'git@github.com:diegofigs/warzone-bot.git',
-      path : '/root/warzone-bot',
+      path : '/home/diego/warzone-bot',
       'pre-deploy-local': '',
-      'post-deploy' : 'npm install && \
-        pm2 reload ecosystem.config.js --env production',
+      'post-deploy' : 'npm install && pm2 reload ecosystem.config.js --env production',
       'pre-setup': '',
       env: env_production
     }
