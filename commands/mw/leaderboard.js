@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const { startOfDay, subDays } = require('date-fns');
 
-const { getHighlights } = require('../../core');
+const { getHighlightsBulk } = require('../../core');
 const { thumbnail, emojis } = require('../../config');
 const players = require('../../data');
 
@@ -86,7 +86,7 @@ module.exports = {
     const interval = getIntervalFromTimeframe(timeframe);
 
     try {
-      const { byKills, byKDR } = await getHighlights(players, interval);
+      const { byKills, byKDR } = await getHighlightsBulk(players, interval);
       const embedColor = '#0099ff';
       const description = `Based on ${timeframe ? `${timeframe}'s` : 'last 20'} matches`;
       const footer = 'This information is property of Infinity Ward';

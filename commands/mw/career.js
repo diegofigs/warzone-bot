@@ -1,4 +1,5 @@
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
+
 const { getCareer } = require('../../core');
 const { thumbnail } = require('../../config');
 
@@ -9,10 +10,14 @@ module.exports = {
   usage: '<gamertag> <platform>',
   execute: async (message, args) => {
     const [gamertag, platform] = args;
+    if (!gamertag || !platform) {
+      message.channel.send('Bad Request: operation requires gamertag, platform');
+      return;
+    }
     try {
       const { kills, wins, kdRatio } = await getCareer({ gamertag, platform });
       const kd = Math.floor(kdRatio * 100) / 100;
-      const careerEmbed = new Discord.MessageEmbed()
+      const careerEmbed = new MessageEmbed()
         .setColor('#0099ff')
         .setTitle(`${gamertag}'s BR Career`)
         .setDescription('Brought to you by wz-bot')
@@ -25,8 +30,8 @@ module.exports = {
         .setTimestamp()
         .setFooter('This information is property of Infinity Ward');
       message.channel.send(careerEmbed);
-    } catch (e) {
-      console.log('error', e);
+    } catch (error) {
+      message.channel.send('Not Found: error fetching player data');
     }
   },
 };
