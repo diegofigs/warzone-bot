@@ -37,6 +37,11 @@ const getStats = async ({ gamertag, platform }) => {
 };
 exports.getStats = getStats;
 
+const getHighlightsWithTag = async ({ gamertag, platform }) => {
+  const highlights = await getHighlights({ gamertag, platform });
+  return { gamertag, ...highlights };
+};
+
 /**
  * Get match stats from `players` ordered by kills, KD ratios; delimited
  * by an optional `interval` parameter.
@@ -46,7 +51,7 @@ exports.getStats = getStats;
 const getHighlightsBulk = async (players) => {
   const playerStats = await bluebird.map(
     players,
-    (player) => getHighlights(player),
+    (player) => getHighlightsWithTag(player),
     { concurrency: 0 }
   );
 
