@@ -14,9 +14,13 @@ module.exports = {
       message.channel.send('Bad Request: operation requires gamertag, platform');
       return;
     }
+    console.log(`Gamertag: ${gamertag}`);
+    console.log(`Platform: ${platform}`);
+
     try {
       const { kills, wins, kdRatio } = await getCareer({ gamertag, platform });
       const kd = Math.floor(kdRatio * 100) / 100;
+      console.log(kills, kd);
       const careerEmbed = new MessageEmbed()
         .setColor('#0099ff')
         .setTitle(`${gamertag}'s BR Career`)
