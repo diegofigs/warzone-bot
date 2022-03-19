@@ -4,13 +4,25 @@
 	],
 	"env": {
 		"node": true,
-		"es6": true
+		"es6": true,
+		"browser": true,
+		"mocha": true
+	},
+	"globals": {
+		"sinon": true
 	},
 	"parserOptions": {
 		"ecmaVersion": 2019
 	},
 	"rules": {
     "semi": ["error", "always"],
-		"comma-dangle": "off"
+		"comma-dangle": "off",
+		"import/extensions": [
+			"error",
+			"never",
+			{
+    		"js": "ignorePackages"
+			}
+		]
 	}
 }
