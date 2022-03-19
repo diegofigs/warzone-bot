@@ -14,7 +14,8 @@
     "dotenv": "^8.2.0",
     "node-schedule": "^2.0.0",
     "pm2": "^5.2.0",
-    "node-fetch": ">=2.6.7"
+    "node-fetch": ">=2.6.7",
+    "ansi-regex": ">=5.0.1"
   },
   "devDependencies": {
     "commitizen": "^4.2.4",
