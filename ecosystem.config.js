@@ -9,8 +9,6 @@ const env = {
   DISCORD_TOKEN: process.env.DISCORD_TOKEN,
   DISCORD_DAILY_STATS_WEBHOOK_ID: process.env.DISCORD_DAILY_STATS_WEBHOOK_ID,
   DISCORD_DAILY_STATS_WEBHOOK_TOKEN: process.env.DISCORD_DAILY_STATS_WEBHOOK_TOKEN,
-  WZ_USERNAME: process.env.WZ_USERNAME,
-  WZ_PASSWORD: process.env.WZ_PASSWORD
 };
 const env_production = {
   ...env,
