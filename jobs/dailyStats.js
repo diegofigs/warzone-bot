@@ -1,9 +1,9 @@
 const schedule = require('node-schedule');
-const Discord = require('discord.js');
+const { MessageEmbed, WebhookClient } = require('discord.js');
 const { startOfDay, subDays } = require('date-fns');
 
 const { emojis, thumbnail, webhookConfig } = require('../config');
-const { getHighlights } = require('../core');
+const { getHighlightsBulk } = require('../core');
 const players = require('../data');
 
 const rule = new schedule.RecurrenceRule();
@@ -12,7 +12,7 @@ rule.hour = 0;
 rule.tz = 'America/Puerto_Rico';
 
 const { dailyStats } = webhookConfig;
-const webhookClient = new Discord.WebhookClient(dailyStats.webhookID, dailyStats.webhookToken);
+const webhookClient = new WebhookClient(dailyStats.webhookID, dailyStats.webhookToken);
 
 const getPositionEmoji = (position) => {
   switch (position) {
@@ -80,7 +80,7 @@ module.exports = {
     const today = startOfDay(new Date());
     const yesterday = subDays(today, 1);
     const interval = { start: yesterday, end: today };
-    const { byKills, byKDR } = await getHighlights(players, interval);
+    const { byKills, byKDR } = await getHighlightsBulk(players, interval);
 
     const embedColor = '#0099ff';
     const description = 'Based on today\'s matches';
@@ -92,7 +92,7 @@ module.exports = {
       const value = `${getKillAccoladeEmoji(mostKills)} ${mostKills} Kills`;
       return { name, value };
     });
-    const killsLeaderboardEmbed = new Discord.MessageEmbed()
+    const killsLeaderboardEmbed = new MessageEmbed()
       .setColor(embedColor)
       .setTitle('Kills Leaderboard')
       .setDescription(description)
@@ -108,7 +108,7 @@ module.exports = {
       const value = `${getKillDeathAccoladeEmoji(highestKD)} ${highestKD} KD`;
       return { name, value };
     });
-    const ratioLeaderboardEmbed = new Discord.MessageEmbed()
+    const ratioLeaderboardEmbed = new MessageEmbed()
       .setColor(embedColor)
       .setTitle('KD Leaderboard')
       .setDescription(description)
