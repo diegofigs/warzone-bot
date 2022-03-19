@@ -1,8 +1,10 @@
 const bluebird = require('bluebird');
 
+const API = 'https://wz-bot.vercel.app/api';
+
 const getCareer = async ({ gamertag, platform }) => {
   const body = { gamertag, platform };
-  const response = await fetch('https://wz-bot-api.vercel.com/api/career', {
+  const response = await fetch(`${API}/career`, {
     method: 'POST',
     body,
   });
@@ -12,7 +14,7 @@ exports.getCareer = getCareer;
 
 const getHighlights = async ({ gamertag, platform }) => {
   const body = { gamertag, platform };
-  const response = await fetch('https://wz-bot-api.vercel.com/api/highlights', {
+  const response = await fetch(`${API}/highlights`, {
     method: 'POST',
     body,
   });
@@ -22,7 +24,7 @@ exports.getHighlights = getHighlights;
 
 const getStats = async ({ gamertag, platform }) => {
   const body = { gamertag, platform };
-  const response = await fetch('https://wz-bot-api.vercel.com/api/stats', {
+  const response = await fetch(`${API}/stats`, {
     method: 'POST',
     body,
   });
