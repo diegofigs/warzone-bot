@@ -121,7 +121,7 @@ module.exports = {
         .addFields(ratioFields)
         .setTimestamp()
         .setFooter(footer);
-      message.channel.send(ratioLeaderboardEmbed);
+      await message.channel.send(ratioLeaderboardEmbed);
     } catch (e) {
       message.channel.send('Not Found: error fetching player data');
     }
