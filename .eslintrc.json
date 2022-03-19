@@ -16,13 +16,6 @@
 	},
 	"rules": {
     "semi": ["error", "always"],
-		"comma-dangle": "off",
-		"import/extensions": [
-			"error",
-			"never",
-			{
-    		"js": "ignorePackages"
-			}
-		]
+		"comma-dangle": "off"
 	}
 }
