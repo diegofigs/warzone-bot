@@ -10,7 +10,5 @@ RUN npm ci
 COPY . .
 
 USER node
-ARG DISCORD_TOKEN
-ENV DISCORD_TOKEN=$DISCORD_TOKEN
 
 CMD [ "node", "index.js" ]

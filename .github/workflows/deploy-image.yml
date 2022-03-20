@@ -9,7 +9,6 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
 
 jobs:
   build-and-push-image:
