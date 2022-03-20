@@ -10,5 +10,5 @@ RUN npm ci
 COPY . .
 
 USER node
-
-CMD [ "node", "index.js" ]
+ENTRYPOINT [ "node" ]
+CMD [ "index.js" ]
