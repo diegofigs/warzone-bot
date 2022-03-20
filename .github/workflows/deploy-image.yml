@@ -1,14 +1,10 @@
 name: Docker Build/Push
 
 on:
-  workflow_run:
-    workflows: [Node.js CI]
-    types:
-      - completed
-    branches:
-      - main
-      - 'releases/**'
-      - diegofigs-patch-1
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main, diegofigs-patch-1 ]
 
 env:
   REGISTRY: ghcr.io
