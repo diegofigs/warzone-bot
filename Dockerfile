@@ -10,5 +10,5 @@ RUN npm ci
 COPY . .
 
 USER node
-ENTRYPOINT [ "node" ]
-CMD [ "index.js" ]
+ENTRYPOINT [ "docker-entrypoint.sh" ]
+CMD [ "node", "index.js" ]
