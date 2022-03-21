@@ -7,11 +7,18 @@ module.exports = [
     gamertag: 'canitopr81#1555983',
     platform: 'acti'
   },
-  // {
-  //   playerName: 'Chiquilape',
-  //   gamertag: 'Chiquilape03#1195',
-  //   platform: 'battle',
-  // },
+  {
+    gamertag: 'MxnTiii#9919771',
+    platform: 'acti'
+  },
+  {
+    gamertag: 'Chiquilape#7180979',
+    platform: 'acti'
+  },
+  {
+    gamertag: 'Chelasky#3109730',
+    platform: 'acti'
+  },
   {
     playerName: 'IParadox',
     gamertag: 'IParadox#6380273',
@@ -32,11 +39,6 @@ module.exports = [
     gamertag: 'L u c i f e r#9544650',
     platform: 'acti'
   },
-  // {
-  //   playerName: 'Paralizado',
-  //   gamertag: 'Paralizado#1884',
-  //   platform: 'battle'
-  // },
   {
     gamertag: 'raulskein_#2257774',
     platform: 'acti'
