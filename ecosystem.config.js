@@ -2,8 +2,9 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
+const host = process.env.SSH_HOST;
 const merge_logs = true;
-const ignore_watch = ['.history', 'node_modules'];
+const ignore_watch = ['.history', 'node_modules']; // vscode .history extension rw ops
 const env = {
   NODE_ENV: 'development',
   DISCORD_TOKEN: process.env.DISCORD_TOKEN,
@@ -37,7 +38,7 @@ module.exports = {
   deploy : {
     production : {
       user : 'diego',
-      host : process.env.SSH_HOST,
+      host,
       ref  : 'origin/main',
       repo : 'git@github.com:diegofigs/warzone-bot.git',
       path : '/home/diego/warzone-bot',
