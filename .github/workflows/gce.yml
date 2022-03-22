@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Build and Deploy to Google Compute Engine
+name: Deploy to Google Compute Engine
 
 on:
   workflow_run:
@@ -24,7 +24,7 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GCE_PROJECT }}
-  GCE_INSTANCE: wz-bot-main
+  GCE_INSTANCE: warzone-bot-main
   GCE_INSTANCE_ZONE: us-east1-b
 
 jobs:
