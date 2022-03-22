@@ -1,0 +1,23 @@
+{
+  "name": "warzone-bot-functions",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "scripts": {
+    "test": "mocha test/*.test.js --timeout=20000 --exit"
+  },
+  "author": "",
+  "dependencies": {
+    "discord.js": "^13.6.0",
+    "gaxios": "^4.3.2"
+  },
+  "devDependencies": {
+    "mocha": "^9.2.2",
+    "sinon": "^13.0.1"
+  }
+}
