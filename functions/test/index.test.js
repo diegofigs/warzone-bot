@@ -3,7 +3,7 @@ const sinon = require('sinon');
 const Discord = require('discord.js');
 const api = require('../src/api');
 
-const stubGetHighlightsBulk = sinon.stub(api, 'getHighlightsBulk');
+const stubGetRebirthBulk = sinon.stub(api, 'getRebirthBulk');
 const stubWebhookClient = sinon.createStubInstance(Discord.WebhookClient);
 sinon.stub(Discord, 'WebhookClient').returns(stubWebhookClient);
 sinon.mock(Discord.MessageEmbed);
@@ -32,11 +32,11 @@ describe('functions', () => {
 
   describe('#sendLeaderboard', () => {
     it('should send leaderboard embeds to webhook channel', async () => {
-      stubGetHighlightsBulk.resolves({ byKills: [], byKDR: [] });
+      stubGetRebirthBulk.resolves({ byKills: [], byKDR: [] });
 
       await functions.sendLeaderboard(pubsubMessage);
 
-      assert(stubGetHighlightsBulk.calledOnce);
+      assert(stubGetRebirthBulk.calledOnce);
       assert(stubWebhookClient.send.calledOnce);
       assert(stubWebhookClient.send.lastCall.firstArg);
     });

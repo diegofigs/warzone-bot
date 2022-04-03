@@ -1,33 +1,24 @@
 module.exports = [
-  // {
-  //   playerName: 'AcostaVIII',
-  //   gamertag: 'AcostaVIII'
-  // },
   {
     gamertag: 'canitopr81#1555983',
-    platform: 'acti'
+    platform: 'acti',
   },
   {
     gamertag: 'MxnTiii#9919771',
-    platform: 'acti'
+    platform: 'acti',
   },
   {
     gamertag: 'Chiquilape#7180979',
-    platform: 'acti'
+    platform: 'acti',
   },
   {
     gamertag: 'Chelasky#3109730',
-    platform: 'acti'
-  },
-  {
-    playerName: 'IParadox',
-    gamertag: 'IParadox#6380273',
-    platform: 'acti'
+    platform: 'acti',
   },
   {
     playerName: 'FernanJ',
     gamertag: 'FernanJ',
-    platform: 'xbl'
+    platform: 'xbl',
   },
   {
     playerName: 'Jishin',
@@ -35,13 +26,8 @@ module.exports = [
     platform: 'battle',
   },
   {
-    playerName: 'L u c i f e r',
-    gamertag: 'L u c i f e r#9544650',
-    platform: 'acti'
-  },
-  {
     gamertag: 'raulskein_#2257774',
-    platform: 'acti'
+    platform: 'acti',
   },
   {
     playerName: 'PG CoConuT',
@@ -54,8 +40,7 @@ module.exports = [
     platform: 'battle',
   },
   {
-    playerName: 'EZ Kill',
-    gamertag: 'MrZodiaK#1712',
+    gamertag: 'RipNDip#11945',
     platform: 'battle',
-  }
+  },
 ];

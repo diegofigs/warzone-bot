@@ -1,7 +1,7 @@
 const { request } = require('gaxios');
 const players = require('../data');
 
-const API = 'https://wz-bot.vercel.app/api';
+const API = 'https://wz-bot-api-e6rusiaura-ue.a.run.app/api';
 
 const headers = { 'Content-Type': 'application/json' };
 
@@ -40,3 +40,19 @@ const getHighlightsBulk = async () => {
   return { byKills, byKDR };
 };
 exports.getHighlightsBulk = getHighlightsBulk;
+
+const getRebirthBulk = async () => {
+  try {
+    const response = await request({
+      url: `${API}/rebirth`,
+      method: 'POST',
+      headers,
+      data: { players },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return { byKills: [], byKDR: [] };
+  }
+};
+exports.getRebirthBulk = getRebirthBulk;
