@@ -1,6 +1,6 @@
 const { MessageEmbed, WebhookClient } = require('discord.js');
 
-const { getHighlightsBulk } = require('./api');
+const { getRebirthBulk } = require('./api');
 const { emojis, thumbnail } = require('../config');
 
 const webhookClient = new WebhookClient({
@@ -65,17 +65,15 @@ const getKillDeathAccoladeEmoji = (kd) => {
 };
 
 const JOB_NAME = 'sendLeaderboard';
+const embedColor = '#0099ff';
+const killsTitle = 'Kills Leaderboard';
+const kdTitle = 'KD Leaderboard';
+const description = "Based on today's matches";
+const footer = { text: 'This information is property of Infinity Ward' };
 
 const sendLeaderboard = async (message) => {
   console.log(`[${JOB_NAME}] started at ${new Date(message.publishTime)}`);
-  // const today = startOfDay(new Date());
-  // const yesterday = subDays(today, 1);
-  // const interval = { start: yesterday, end: today };
-  const { byKills, byKDR } = await getHighlightsBulk();
-
-  const embedColor = '#0099ff';
-  const description = "Based on today's matches";
-  const footer = { text: 'This information is property of Infinity Ward' };
+  const { byKills, byKDR } = await getRebirthBulk();
 
   const killsFields = byKills.map(({ gamertag, mostKills }, i) => {
     const position = i + 1;
@@ -87,7 +85,7 @@ const sendLeaderboard = async (message) => {
   });
   const killsLeaderboardEmbed = new MessageEmbed()
     .setColor(embedColor)
-    .setTitle('Kills Leaderboard')
+    .setTitle(killsTitle)
     .setDescription(description)
     .setThumbnail(thumbnail)
     .addFields(killsFields)
@@ -104,7 +102,7 @@ const sendLeaderboard = async (message) => {
   });
   const ratioLeaderboardEmbed = new MessageEmbed()
     .setColor(embedColor)
-    .setTitle('KD Leaderboard')
+    .setTitle(kdTitle)
     .setDescription(description)
     .setThumbnail(thumbnail)
     .addFields(ratioFields)
