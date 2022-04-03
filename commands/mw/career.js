@@ -3,6 +3,8 @@ const { MessageEmbed } = require('discord.js');
 const { getCareer } = require('../../core');
 const { thumbnail } = require('../../config');
 
+const footer = { text: 'This information is property of Infinity Ward' };
+
 module.exports = {
   name: 'career',
   description: 'Fetch Ranked BR Kills, Wins, KD',
@@ -23,15 +25,14 @@ module.exports = {
         .setDescription('Brought to you by wz-bot')
         .setThumbnail(thumbnail)
         .addFields(
-          { name: 'Kills', value: kills, inline: true },
-          { name: 'Wins', value: wins, inline: true },
-          { name: 'KD', value: kd, inline: true },
+          { name: 'Kills', value: kills.toString(), inline: true },
+          { name: 'Wins', value: wins.toString(), inline: true },
+          { name: 'KD', value: kd.toString(), inline: true },
         )
         .setTimestamp()
-        .setFooter('This information is property of Infinity Ward');
-      message.channel.send(careerEmbed);
+        .setFooter(footer);
+      message.channel.send({ embeds: [careerEmbed] });
     } catch (error) {
-      console.error(error);
       message.channel.send('Not Found: error fetching player data');
     }
   },

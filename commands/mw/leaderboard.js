@@ -74,6 +74,7 @@ const getKillDeathAccoladeEmoji = (kd) => {
   }
   return '';
 };
+const footer = { text: 'This information is property of Infinity Ward' };
 
 module.exports = {
   name: 'leaderboard',
@@ -89,7 +90,6 @@ module.exports = {
       const { byKills, byKDR } = await getHighlightsBulk(players, interval);
       const embedColor = '#0099ff';
       const description = `Based on ${timeframe ? `${timeframe}'s` : 'last 20'} matches`;
-      const footer = 'This information is property of Infinity Ward';
 
       const killsFields = byKills.map(({ gamertag, mostKills }, i) => {
         const position = i + 1;

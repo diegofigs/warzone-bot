@@ -1,10 +1,9 @@
 const assert = require('assert');
 const sinon = require('sinon');
-const Discord = require('discord.js');
+
 const core = require('../core');
 
 const stubGetCareer = sinon.stub(core, 'getCareer');
-sinon.mock(Discord.MessageEmbed);
 
 const career = require('../commands/mw/career');
 
@@ -46,6 +45,6 @@ describe('career', () => {
 
     assert(stubGetCareer.calledOnceWith({ gamertag, platform }));
     assert(fakeSend.calledOnce);
-    assert.ok(fakeSend.lastCall.firstArg.timestamp);
+    assert.ok(fakeSend.lastCall.firstArg);
   });
 });

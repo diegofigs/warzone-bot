@@ -1,11 +1,11 @@
 
-FROM node:14.15.1-alpine
+FROM node:16.13.1-alpine
 ENV NODE_ENV=production
 
 WORKDIR /app
 
 COPY ["package.json", "package-lock.json*", "./"]
-RUN npm ci
+RUN npm ci --omit=dev --ignore-scripts
 
 COPY . .
 
