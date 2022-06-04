@@ -16,7 +16,6 @@
     "node-fetch": ">=2.6.7"
   },
   "devDependencies": {
-    "cz-emoji": "^1.3.1",
     "eslint": "^7.21.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
@@ -28,14 +27,8 @@
     "start": "node -r dotenv/config .",
     "test": "mocha --require tests/hooks.js tests",
     "lint": "eslint .",
-    "cm": "git-cz",
     "prepare": "husky install"
   },
   "author": "Diego Figueroa <diego@dfigueroa.me>",
-  "license": "ISC",
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-emoji"
-    }
-  }
+  "license": "MIT"
 }
