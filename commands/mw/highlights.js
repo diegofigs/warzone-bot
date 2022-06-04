@@ -4,6 +4,8 @@ const { startOfDay } = require('date-fns');
 const { getHighlights } = require('../../core');
 const { thumbnail } = require('../../config');
 
+const footer = { text: 'This information is property of Infinity Ward' };
+
 module.exports = {
   name: 'highlights',
   description: 'Fetch Highest Kills / Most Deaths of the day',
@@ -25,13 +27,13 @@ module.exports = {
         .setDescription('Brought to you by wz-bot')
         .setThumbnail(thumbnail)
         .addFields(
-          { name: 'Most Kills', value: mostKills, inline: true },
-          { name: 'Highest KD', value: highestKD, inline: true },
+          { name: 'Most Kills', value: mostKills.toString(), inline: true },
+          { name: 'Highest KD', value: highestKD.toString(), inline: true },
         )
         .setTimestamp()
-        .setFooter('This information is property of Infinity Ward');
+        .setFooter(footer);
 
-      message.channel.send(statsEmbed);
+      message.channel.send({ embeds: [statsEmbed] });
     } catch (error) {
       message.channel.send('Not Found: error fetching player data');
     }
