@@ -4,7 +4,7 @@
   "description": "Discord Bot for fetching CoD MW/WZ Stats",
   "repository": {
     "type": "git",
-    "url": "https://github.com/diegofigs/wz-bot"
+    "url": "https://github.com/diegofigs/warzone-bot"
   },
   "main": "index.js",
   "dependencies": {
