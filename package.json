@@ -26,7 +26,7 @@
   "scripts": {
     "start": "node -r dotenv/config .",
     "test": "mocha --require tests/hooks.js tests",
-    "lint": "eslint .",
+    "lint": "eslint \"**/*.js\" --fix",
     "prepare": "husky install"
   },
   "author": "Diego Figueroa <diego@dfigueroa.me>",
