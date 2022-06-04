@@ -2,7 +2,8 @@ name: Docker Build/Push
 
 on:
   workflow_run:
-    workflows: [ "Node.js CI"]
+    workflows:
+      - Release
     types:
       - completed
     branches:
