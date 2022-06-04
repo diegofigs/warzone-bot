@@ -20,6 +20,7 @@
     "eslint-plugin-import": "^2.22.1",
     "husky": "^5.1.3",
     "mocha": "^9.2.2",
+    "semantic-release": "^19.0.2",
     "sinon": "^13.0.1"
   },
   "scripts": {
@@ -27,6 +28,12 @@
     "test": "mocha --require tests/hooks.js tests",
     "lint": "eslint \"**/*.js\" --fix",
     "prepare": "husky install"
+  },
+  "release": {
+    "branches": [
+      "main",
+      "next"
+    ]
   },
   "author": "Diego Figueroa <diego@dfigueroa.me>",
   "license": "MIT"
