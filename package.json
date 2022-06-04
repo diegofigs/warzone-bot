@@ -6,6 +6,7 @@
     "type": "git",
     "url": "https://github.com/diegofigs/warzone-bot"
   },
+  "private": true,
   "main": "index.js",
   "dependencies": {
     "bluebird": "^3.7.2",
