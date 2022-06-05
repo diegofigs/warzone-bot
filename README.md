@@ -1,5 +1,7 @@
 # warzone-bot
 
+![Release](https://github.com/diegofigs/warzone-bot/actions/workflows/release.yml/badge.svg)
+
 Discord Bot for fetching CoD MW/WZ Stats
 
 ## Installation
