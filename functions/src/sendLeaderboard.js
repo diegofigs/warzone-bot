@@ -1,7 +1,7 @@
-const { MessageEmbed, WebhookClient } = require('discord.js');
+const { MessageEmbed, WebhookClient } = require("discord.js");
 
-const { getRebirthBulk } = require('./api');
-const { emojis, thumbnail } = require('../config');
+const { getRebirthBulk } = require("./api");
+const { emojis, thumbnail } = require("../config");
 
 const webhookClient = new WebhookClient({
   url: process.env.DISCORD_LEADERBOARD_WEBHOOK_URL,
@@ -14,7 +14,7 @@ const getPositionEmoji = (position) => {
     case 2:
       return emojis.runner;
     default:
-      return '';
+      return "";
   }
 };
 
@@ -45,7 +45,7 @@ const getKillAccoladeEmoji = (kills) => {
   if (kills === DONUT) {
     return emojis.donut;
   }
-  return '';
+  return "";
 };
 
 const HIGH_KD_THRESHOLD = 10;
@@ -61,15 +61,15 @@ const getKillDeathAccoladeEmoji = (kd) => {
   if (kd >= GOOD_KD_THRESHOLD) {
     return emojis.red_heart;
   }
-  return '';
+  return "";
 };
 
-const JOB_NAME = 'sendLeaderboard';
-const embedColor = '#0099ff';
-const killsTitle = 'Kills Leaderboard';
-const kdTitle = 'KD Leaderboard';
+const JOB_NAME = "sendLeaderboard";
+const embedColor = "#0099ff";
+const killsTitle = "Kills Leaderboard";
+const kdTitle = "KD Leaderboard";
 const description = "Based on today's matches";
-const footer = { text: 'This information is property of Infinity Ward' };
+const footer = { text: "This information is property of Infinity Ward" };
 
 const sendLeaderboard = async (message) => {
   console.log(`[${JOB_NAME}] started at ${new Date(message.publishTime)}`);
@@ -77,9 +77,9 @@ const sendLeaderboard = async (message) => {
 
   const killsFields = byKills.map(({ gamertag, mostKills }, i) => {
     const position = i + 1;
-    const name = `${getNumberEmoji(position) || `**${position}**`} ${getPositionEmoji(
-      position
-    )} **${gamertag}**`;
+    const name = `${
+      getNumberEmoji(position) || `**${position}**`
+    } ${getPositionEmoji(position)} **${gamertag}**`;
     const value = `${getKillAccoladeEmoji(mostKills)} ${mostKills} Kills`;
     return { name, value };
   });
@@ -94,9 +94,9 @@ const sendLeaderboard = async (message) => {
 
   const ratioFields = byKDR.map(({ gamertag, highestKD }, i) => {
     const position = i + 1;
-    const name = `${getNumberEmoji(position) || `**${position}**`} ${getPositionEmoji(
-      position
-    )} **${gamertag}**`;
+    const name = `${
+      getNumberEmoji(position) || `**${position}**`
+    } ${getPositionEmoji(position)} **${gamertag}**`;
     const value = `${getKillDeathAccoladeEmoji(highestKD)} ${highestKD} KD`;
     return { name, value };
   });
@@ -108,7 +108,9 @@ const sendLeaderboard = async (message) => {
     .addFields(ratioFields)
     .setTimestamp()
     .setFooter(footer);
-  await webhookClient.send({ embeds: [killsLeaderboardEmbed, ratioLeaderboardEmbed] });
+  await webhookClient.send({
+    embeds: [killsLeaderboardEmbed, ratioLeaderboardEmbed],
+  });
 
   console.log(`[${JOB_NAME}] finished at ${new Date()}`);
 };

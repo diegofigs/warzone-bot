@@ -1,27 +1,27 @@
-const assert = require('assert');
-const sinon = require('sinon');
-const Discord = require('discord.js');
-const api = require('../src/api');
+const assert = require("assert");
+const sinon = require("sinon");
+const Discord = require("discord.js");
+const api = require("../src/api");
 
-const stubGetRebirthBulk = sinon.stub(api, 'getRebirthBulk');
+const stubGetRebirthBulk = sinon.stub(api, "getRebirthBulk");
 const stubWebhookClient = sinon.createStubInstance(Discord.WebhookClient);
-sinon.stub(Discord, 'WebhookClient').returns(stubWebhookClient);
+sinon.stub(Discord, "WebhookClient").returns(stubWebhookClient);
 sinon.mock(Discord.MessageEmbed);
 
-const functions = require('../index');
+const functions = require("../index");
 
-const MESSAGE = 'message';
+const MESSAGE = "message";
 
-describe('functions', () => {
+describe("functions", () => {
   const jsonObject = JSON.stringify({ data: MESSAGE });
-  const jsonBuffer = Buffer.from(jsonObject).toString('base64');
+  const jsonBuffer = Buffer.from(jsonObject).toString("base64");
   const pubsubMessage = { data: jsonBuffer, publishTime: new Date() };
 
   let stubLog;
   let stubError;
   const stubConsole = () => {
-    stubLog = sinon.stub(console, 'log');
-    stubError = sinon.stub(console, 'error');
+    stubLog = sinon.stub(console, "log");
+    stubError = sinon.stub(console, "error");
   };
   const restoreConsole = () => {
     stubLog.restore();
@@ -30,8 +30,8 @@ describe('functions', () => {
   beforeEach(stubConsole);
   afterEach(restoreConsole);
 
-  describe('#sendLeaderboard', () => {
-    it('should send leaderboard embeds to webhook channel', async () => {
+  describe("#sendLeaderboard", () => {
+    it("should send leaderboard embeds to webhook channel", async () => {
       stubGetRebirthBulk.resolves({ byKills: [], byKDR: [] });
 
       await functions.sendLeaderboard(pubsubMessage);

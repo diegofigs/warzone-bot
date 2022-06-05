@@ -1,45 +1,45 @@
-const bluebird = require('bluebird');
-const fetch = require('node-fetch');
+const bluebird = require("bluebird");
+const fetch = require("node-fetch");
 
-const API = 'https://wz-bot.vercel.app/api';
-const headers = { 'Content-Type': 'application/json' };
+const API = "https://wz-bot.vercel.app/api";
+const headers = { "Content-Type": "application/json" };
 
 const getCareer = async ({ gamertag, platform }) => {
-	const body = JSON.stringify({ gamertag, platform });
-	const response = await fetch(`${API}/career`, {
-		method: 'POST',
-		headers,
-		body,
-	});
-	return response.json();
+  const body = JSON.stringify({ gamertag, platform });
+  const response = await fetch(`${API}/career`, {
+    method: "POST",
+    headers,
+    body,
+  });
+  return response.json();
 };
 exports.getCareer = getCareer;
 
 const getHighlights = async ({ gamertag, platform }) => {
-	const body = JSON.stringify({ gamertag, platform });
-	const response = await fetch(`${API}/highlights`, {
-		method: 'POST',
-		headers,
-		body,
-	});
-	return response.json();
+  const body = JSON.stringify({ gamertag, platform });
+  const response = await fetch(`${API}/highlights`, {
+    method: "POST",
+    headers,
+    body,
+  });
+  return response.json();
 };
 exports.getHighlights = getHighlights;
 
 const getStats = async ({ gamertag, platform }) => {
-	const body = JSON.stringify({ gamertag, platform });
-	const response = await fetch(`${API}/stats`, {
-		method: 'POST',
-		headers,
-		body,
-	});
-	return response.json();
+  const body = JSON.stringify({ gamertag, platform });
+  const response = await fetch(`${API}/stats`, {
+    method: "POST",
+    headers,
+    body,
+  });
+  return response.json();
 };
 exports.getStats = getStats;
 
 const getHighlightsWithTag = async ({ gamertag, platform }) => {
-	const highlights = await getHighlights({ gamertag, platform });
-	return { gamertag, ...highlights };
+  const highlights = await getHighlights({ gamertag, platform });
+  return { gamertag, ...highlights };
 };
 
 /**
@@ -49,18 +49,18 @@ const getHighlightsWithTag = async ({ gamertag, platform }) => {
  * @param {{ start: Date, end: Date }} interval interval object with `start`, `end` dates
  */
 const getHighlightsBulk = async (players) => {
-	const playerStats = await bluebird.map(
-		players,
-		(player) => getHighlightsWithTag(player),
-		{ concurrency: 0 },
-	);
+  const playerStats = await bluebird.map(
+    players,
+    (player) => getHighlightsWithTag(player),
+    { concurrency: 0 }
+  );
 
-	const playerEntries = playerStats.filter(
-		({ mostKills, highestKD }) => mostKills || highestKD,
-	);
-	const byKills = [...playerEntries].sort((a, b) => b.mostKills - a.mostKills);
-	const byKDR = [...playerEntries].sort((a, b) => b.highestKD - a.highestKD);
+  const playerEntries = playerStats.filter(
+    ({ mostKills, highestKD }) => mostKills || highestKD
+  );
+  const byKills = [...playerEntries].sort((a, b) => b.mostKills - a.mostKills);
+  const byKDR = [...playerEntries].sort((a, b) => b.highestKD - a.highestKD);
 
-	return { byKills, byKDR };
+  return { byKills, byKDR };
 };
 exports.getHighlightsBulk = getHighlightsBulk;

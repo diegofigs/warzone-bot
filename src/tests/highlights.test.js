@@ -1,49 +1,52 @@
-const assert = require('assert');
-const sinon = require('sinon');
-const core = require('../core');
+const assert = require("assert");
+const sinon = require("sinon");
+const core = require("../core");
 
-const stubGetHighlights = sinon.stub(core, 'getHighlights');
+const stubGetHighlights = sinon.stub(core, "getHighlights");
 
-const highlights = require('../commands/wz/highlights');
+const highlights = require("../commands/wz/highlights");
 
-const gamertag = 'diegofigs#1120';
-const platform = 'battle';
+const gamertag = "diegofigs#1120";
+const platform = "battle";
 
-describe('highlights', () => {
-	const fakeSend = sinon.fake();
-	const message = { channel: { send: fakeSend } };
+describe("highlights", () => {
+  const fakeSend = sinon.fake();
+  const message = { channel: { send: fakeSend } };
 
-	afterEach(() => {
-		stubGetHighlights.reset();
-		fakeSend.resetHistory();
-	});
-	it('should return message if gamertag or platform are empty', async () => {
-		await highlights.execute(message, [gamertag, '']);
-		await highlights.execute(message, ['', platform]);
+  afterEach(() => {
+    stubGetHighlights.reset();
+    fakeSend.resetHistory();
+  });
+  it("should return message if gamertag or platform are empty", async () => {
+    await highlights.execute(message, [gamertag, ""]);
+    await highlights.execute(message, ["", platform]);
 
-		assert(stubGetHighlights.notCalled);
-		assert(fakeSend.calledTwice);
-		assert(fakeSend.getCalls().every((call) => call.firstArg.includes('Bad Request')));
-	});
+    assert(stubGetHighlights.notCalled);
+    assert(fakeSend.calledTwice);
+    assert(
+      fakeSend.getCalls().every((call) => call.firstArg.includes("Bad Request"))
+    );
+  });
 
-	it('should return message if gamertag or platform are invalid', async () => {
-		stubGetHighlights.rejects();
+  it("should return message if gamertag or platform are invalid", async () => {
+    stubGetHighlights.rejects();
 
-		await highlights.execute(message, [gamertag, platform]);
+    await highlights.execute(message, [gamertag, platform]);
 
-		assert(fakeSend.calledOnce);
-		assert(fakeSend.lastCall.firstArg.includes('Not Found'));
-	});
+    assert(fakeSend.calledOnce);
+    assert(fakeSend.lastCall.firstArg.includes("Not Found"));
+  });
 
-	it('should return embed if gamertag and platform are valid', async () => {
-		stubGetHighlights.resolves({
-			mostKills: 0, highestKD: 0,
-		});
+  it("should return embed if gamertag and platform are valid", async () => {
+    stubGetHighlights.resolves({
+      mostKills: 0,
+      highestKD: 0,
+    });
 
-		await highlights.execute(message, [gamertag, platform]);
+    await highlights.execute(message, [gamertag, platform]);
 
-		assert(stubGetHighlights.calledOnceWith({ gamertag, platform }));
-		assert(fakeSend.calledOnce);
-		assert.ok(fakeSend.lastCall.firstArg);
-	});
+    assert(stubGetHighlights.calledOnceWith({ gamertag, platform }));
+    assert(fakeSend.calledOnce);
+    assert.ok(fakeSend.lastCall.firstArg);
+  });
 });
