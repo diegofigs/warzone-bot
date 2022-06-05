@@ -5,7 +5,7 @@ const core = require('../core');
 
 const stubGetCareer = sinon.stub(core, 'getCareer');
 
-const career = require('../commands/mw/career');
+const career = require('../commands/wz/career');
 
 const gamertag = 'diegofigs#1120';
 const platform = 'battle';

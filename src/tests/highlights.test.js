@@ -4,7 +4,7 @@ const core = require('../core');
 
 const stubGetHighlights = sinon.stub(core, 'getHighlights');
 
-const highlights = require('../commands/mw/highlights');
+const highlights = require('../commands/wz/highlights');
 
 const gamertag = 'diegofigs#1120';
 const platform = 'battle';
