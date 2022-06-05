@@ -1,5 +1,6 @@
 # warzone-bot
 
+![CI](https://github.com/diegofigs/warzone-bot/actions/workflows/node.js.yml/badge.svg)
 ![Release](https://github.com/diegofigs/warzone-bot/actions/workflows/release.yml/badge.svg)
 
 Discord Bot for fetching CoD MW/WZ Stats
