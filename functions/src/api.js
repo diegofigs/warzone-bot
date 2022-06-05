@@ -1,16 +1,16 @@
-const { request } = require('gaxios');
-const players = require('../data');
+const { request } = require("gaxios");
+const players = require("../data");
 
-const API = 'https://wz-bot-api-e6rusiaura-ue.a.run.app/api';
+const API = "https://wz-bot-api-e6rusiaura-ue.a.run.app/api";
 
-const headers = { 'Content-Type': 'application/json' };
+const headers = { "Content-Type": "application/json" };
 
 const getHighlights = async ({ gamertag, platform }) => {
   try {
     const body = JSON.stringify({ gamertag, platform });
     const response = await request({
       url: `${API}/highlights`,
-      method: 'POST',
+      method: "POST",
       headers,
       body,
     });
@@ -45,7 +45,7 @@ const getRebirthBulk = async () => {
   try {
     const response = await request({
       url: `${API}/rebirth`,
-      method: 'POST',
+      method: "POST",
       headers,
       data: { players },
     });
