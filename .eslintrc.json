@@ -17,5 +17,6 @@
 	"rules": {
     "semi": ["error", "always"],
 		"comma-dangle": "off"
-	}
+	},
+	"ignorePatterns": ["**/tests/hooks.js"]
 }

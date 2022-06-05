@@ -26,7 +26,7 @@
   },
   "scripts": {
     "start": "node -r dotenv/config .",
-    "test": "mocha --require tests/hooks.js tests",
+    "test": "mocha --require src/tests/hooks.js src/tests",
     "lint": "eslint \"**/*.js\" --fix",
     "prepare": "husky install"
   },
