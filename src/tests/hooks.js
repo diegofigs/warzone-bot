@@ -6,12 +6,12 @@ const Discord = require("discord.js");
 exports.mochaHooks = {
   beforeEach() {
     sinon.mock(Discord.MessageEmbed);
-    // sinon.stub(console, "log");
-    // sinon.stub(console, "error");
+    sinon.stub(console, "log");
+    sinon.stub(console, "error");
   },
   afterEach() {
-    // console.log.restore();
-    // console.error.restore();
+    console.log.restore();
+    console.error.restore();
     sinon.restore();
   },
 };
