@@ -5,24 +5,26 @@ const core = require("../core");
 
 const stubGetLeaderboard = sinon.stub(core, "getHighlightsBulk");
 
-const leaderboard = require("../commands/wz/leaderboard");
-
-const gamertag = "diegofigs#1120";
-const platform = "battle";
+const leaderboard = require("../commands/leaderboard");
 
 describe("leaderboard", () => {
   const fakeSend = sinon.fake();
-  const message = { channel: { send: fakeSend } };
+  const stubGetString = sinon.stub();
+  const message = {
+    channel: { send: fakeSend },
+    options: { getString: stubGetString },
+  };
 
   afterEach(() => {
     stubGetLeaderboard.reset();
+    stubGetString.reset();
     fakeSend.resetHistory();
   });
 
   it("should return message if leaderboard cannot be fetched", async () => {
     stubGetLeaderboard.rejects();
 
-    await leaderboard.execute(message, [gamertag, platform]);
+    await leaderboard.execute(message);
 
     assert(fakeSend.calledOnce);
     assert(fakeSend.lastCall.firstArg.includes("Not Found"));
@@ -34,7 +36,7 @@ describe("leaderboard", () => {
       byKDR: [],
     });
 
-    await leaderboard.execute(message, [gamertag, platform]);
+    await leaderboard.execute(message);
 
     assert(stubGetLeaderboard.calledOnce);
     assert(fakeSend.calledTwice);

@@ -4,22 +4,39 @@ const core = require("../core");
 
 const stubGetHighlights = sinon.stub(core, "getHighlights");
 
-const highlights = require("../commands/wz/highlights");
+const highlights = require("../commands/highlights");
 
 const gamertag = "diegofigs#1120";
 const platform = "battle";
 
 describe("highlights", () => {
   const fakeSend = sinon.fake();
-  const message = { channel: { send: fakeSend } };
+  const stubGetString = sinon.stub();
+  const message = {
+    channel: { send: fakeSend },
+    options: { getString: stubGetString },
+  };
 
   afterEach(() => {
     stubGetHighlights.reset();
+    stubGetString.reset();
     fakeSend.resetHistory();
   });
   it("should return message if gamertag or platform are empty", async () => {
-    await highlights.execute(message, [gamertag, ""]);
-    await highlights.execute(message, ["", platform]);
+    stubGetString
+      .withArgs("gamertag")
+      .onFirstCall()
+      .returns(gamertag)
+      .onSecondCall()
+      .returns("");
+    stubGetString
+      .withArgs("platform")
+      .onFirstCall()
+      .returns("")
+      .onSecondCall()
+      .returns(platform);
+    await highlights.execute(message);
+    await highlights.execute(message);
 
     assert(stubGetHighlights.notCalled);
     assert(fakeSend.calledTwice);
@@ -29,15 +46,19 @@ describe("highlights", () => {
   });
 
   it("should return message if gamertag or platform are invalid", async () => {
+    stubGetString.withArgs("gamertag").onFirstCall().returns(gamertag);
+    stubGetString.withArgs("platform").onFirstCall().returns(platform);
     stubGetHighlights.rejects();
 
-    await highlights.execute(message, [gamertag, platform]);
+    await highlights.execute(message);
 
     assert(fakeSend.calledOnce);
     assert(fakeSend.lastCall.firstArg.includes("Not Found"));
   });
 
   it("should return embed if gamertag and platform are valid", async () => {
+    stubGetString.withArgs("gamertag").onFirstCall().returns(gamertag);
+    stubGetString.withArgs("platform").onFirstCall().returns(platform);
     stubGetHighlights.resolves({
       mostKills: 0,
       highestKD: 0,

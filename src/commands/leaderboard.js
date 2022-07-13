@@ -1,9 +1,10 @@
 const Discord = require("discord.js");
+const { SlashCommandBuilder } = require("@discordjs/builders");
 const { startOfDay, subDays } = require("date-fns");
 
-const { getHighlightsBulk } = require("../../core");
-const { thumbnail, emojis } = require("../../config");
-const players = require("../../data");
+const { getHighlightsBulk } = require("../core");
+const { thumbnail, emojis } = require("../config");
+const players = require("../data");
 
 const getIntervalFromTimeframe = (timeframe) => {
   const now = new Date();
@@ -77,13 +78,16 @@ const getKillDeathAccoladeEmoji = (kd) => {
 const footer = { text: "This information is property of Infinity Ward" };
 
 module.exports = {
-  name: "leaderboard",
-  aliases: ["rankings"],
-  args: false,
-  usage: "<timeframe? today|yesterday>",
-  description: "Fetch squad's rankings ordered by Kills and KD",
-  execute: async (message, args) => {
-    const [timeframe] = args;
+  data: new SlashCommandBuilder()
+    .setName("leaderboard")
+    .setDescription("Fetch squad's rankings ordered by Kills and KD")
+    .addStringOption((option) =>
+      option
+        .setName("timeframe")
+        .setDescription("timeframe to delimit results by")
+    ),
+  async execute(interaction) {
+    const timeframe = interaction.options.getString("timeframe");
     const interval = getIntervalFromTimeframe(timeframe);
 
     try {
@@ -109,7 +113,7 @@ module.exports = {
         .addFields(killsFields)
         .setTimestamp()
         .setFooter(footer);
-      await message.channel.send(killsLeaderboardEmbed);
+      await interaction.channel.send(killsLeaderboardEmbed);
 
       const ratioFields = byKDR.map(({ gamertag, highestKD }, i) => {
         const position = i + 1;
@@ -127,9 +131,9 @@ module.exports = {
         .addFields(ratioFields)
         .setTimestamp()
         .setFooter(footer);
-      await message.channel.send(ratioLeaderboardEmbed);
+      return interaction.channel.send(ratioLeaderboardEmbed);
     } catch (e) {
-      message.channel.send("Not Found: error fetching player data");
+      return interaction.channel.send("Not Found: error fetching player data");
     }
   },
 };
