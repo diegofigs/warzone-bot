@@ -1,3 +1,5 @@
+const fetch = require("node-fetch");
+
 const API = "https://wz-bot.vercel.app/api";
 const headers = { "Content-Type": "application/json" };
 
