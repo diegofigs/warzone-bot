@@ -2,7 +2,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { Client, Collection, Intents } = require("discord.js");
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({
+  intents: [Intents.FLAGS.GUILDS],
+  presence: { activity: { name: "with the WZ Bot" } },
+});
 
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, "src", "commands");
@@ -16,17 +19,11 @@ for (const file of commandFiles) {
   client.commands.set(command.data.name, command);
 }
 
-const eventFiles = fs
-  .readdirSync("./src/events")
-  .filter((file) => file.endsWith(".js"));
-for (const file of eventFiles) {
-  const event = require(`./src/events/${file}`);
-  if (event.once) {
-    client.once(event.name, (...args) => event.execute(...args, client));
-  } else {
-    client.on(event.name, (...args) => event.execute(...args, client));
-  }
-}
+client.on("ready", (client) => {
+  console.info(
+    `Logged in as ${client.user.tag} at ${new Date().toLocaleString("en")}`
+  );
+});
 
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) return;

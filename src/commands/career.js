@@ -45,13 +45,11 @@ module.exports = {
           )
           .setTimestamp()
           .setFooter(footer);
-        return interaction.channel.send({ embeds: [careerEmbed] });
+        return interaction.reply({ embeds: [careerEmbed] });
       } catch (error) {
-        return interaction.channel.send(
-          "Not Found: error fetching player data"
-        );
+        return interaction.reply("Not Found: error fetching player data");
       }
     }
-    return interaction.channel.send("Bad Request");
+    return interaction.reply("Bad Request");
   },
 };

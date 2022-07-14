@@ -13,7 +13,7 @@ describe("highlights", () => {
   const fakeSend = sinon.fake();
   const stubGetString = sinon.stub();
   const message = {
-    channel: { send: fakeSend },
+    reply: fakeSend,
     options: { getString: stubGetString },
   };
 

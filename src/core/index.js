@@ -1,4 +1,3 @@
-const bluebird = require("bluebird");
 const fetch = require("node-fetch");
 
 const API = "https://wz-bot.vercel.app/api";
@@ -49,10 +48,8 @@ const getHighlightsWithTag = async ({ gamertag, platform }) => {
  * @param {{ start: Date, end: Date }} interval interval object with `start`, `end` dates
  */
 const getHighlightsBulk = async (players) => {
-  const playerStats = await bluebird.map(
-    players,
-    (player) => getHighlightsWithTag(player),
-    { concurrency: 0 }
+  const playerStats = await Promise.all(
+    players.map((player) => getHighlightsWithTag(player))
   );
 
   const playerEntries = playerStats.filter(
