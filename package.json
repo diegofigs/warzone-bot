@@ -21,7 +21,6 @@
   "devDependencies": {
     "eslint": "^7.21.0",
     "eslint-config-prettier": "8.5.0",
-    "husky": "^5.1.3",
     "mocha": "^9.2.2",
     "prettier": "2.6.2",
     "semantic-release": "^19.0.2",
@@ -30,8 +29,7 @@
   "scripts": {
     "start": "node -r dotenv/config .",
     "test": "mocha --require src/tests/hooks.js src/tests",
-    "lint": "npx prettier --check . && eslint .",
-    "prepare": "husky install"
+    "lint": "npx prettier --check . && eslint ."
   },
   "release": {
     "branches": [
