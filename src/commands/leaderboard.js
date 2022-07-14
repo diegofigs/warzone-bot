@@ -113,7 +113,7 @@ module.exports = {
         .addFields(killsFields)
         .setTimestamp()
         .setFooter(footer);
-      await interaction.channel.send(killsLeaderboardEmbed);
+      await interaction.reply(killsLeaderboardEmbed);
 
       const ratioFields = byKDR.map(({ gamertag, highestKD }, i) => {
         const position = i + 1;
@@ -131,9 +131,9 @@ module.exports = {
         .addFields(ratioFields)
         .setTimestamp()
         .setFooter(footer);
-      return interaction.channel.send(ratioLeaderboardEmbed);
+      return interaction.reply(ratioLeaderboardEmbed);
     } catch (e) {
-      return interaction.channel.send("Not Found: error fetching player data");
+      return interaction.reply("Not Found: error fetching player data");
     }
   },
 };
